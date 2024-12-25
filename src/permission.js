@@ -35,7 +35,7 @@ router.beforeEach(async(to, from, next) => {
       } else if ('service' in query) {
         // 获取CAS授权
         await store.dispatch('user/get_cas_authorize', to.query)
-      } else if ('saml_request' in query) {
+      } else if ('SAMLRequest' in query) {
         // 获取SAML授权
         const authorize = await store.dispatch('user/get_saml_authorize', to.query)
         // 将授权HTML插入到当前页面的DOM中
