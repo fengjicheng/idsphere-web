@@ -49,9 +49,15 @@
     </el-row>
     <el-row>
       <el-col :span="12">
-        <el-form-item label="企业微信ID" prop="ww_id">
+        <el-form-item label="企业微信ID：" prop="ww_id">
           <el-input v-model="form.ww_id" autocomplete="off" clearable />
           <div class="help-block" style="color: #999; font-size: 12px">需要登录《<el-link :underline="false" type="primary" href="https://work.weixin.qq.com" target="_blank" style="font-size: 12px">企业微信管理后台</el-link>》，在通讯录中获取</div>
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="天翼云ID：" prop="ctyun_id">
+          <el-input v-model="form.ctyun_id" autocomplete="off" clearable />
+          <div class="help-block" style="color: #999; font-size: 12px">需要在天翼云 IAM 账号后台获取</div>
         </el-form-item>
       </el-col>
     </el-row>
@@ -79,7 +85,8 @@ export default {
           phone_number: '',
           email: '',
           password: '',
-          ww_id: '',
+          ww_id: null,
+          ctyun_id: null,
           password_expired_at: null
         }
       }
@@ -182,7 +189,7 @@ export default {
         }
 
         // 获取出表单中的数据
-        const { id, username, password, phone_number, email, name, is_active, ww_id, password_expired_at } = this.form
+        const { id, username, password, phone_number, email, name, is_active, ww_id, password_expired_at, ctyun_id } = this.form
         const data = {
           'id': id,
           'username': username,
@@ -191,6 +198,7 @@ export default {
           'email': email,
           'name': name,
           'ww_id': ww_id,
+          'ctyun_id': ctyun_id,
           'is_active': is_active,
           'password_expired_at': password_expired_at
         }
