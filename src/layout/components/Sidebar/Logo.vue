@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { getLogo } from '@/api/system/settings'
+
 export default {
   name: 'SidebarLogo',
   props: {
@@ -26,6 +28,18 @@ export default {
     return {
       title: process.env.VUE_APP_TITLE,
       logo: require('@/assets/logo.png')
+    }
+  },
+  created() {
+    this.handleLogo()
+  },
+  methods: {
+    handleLogo() {
+      getLogo().then(res => {
+        if (res.code === 0 && res.path !== '') {
+          this.logo = res.path
+        }
+      })
     }
   }
 }
