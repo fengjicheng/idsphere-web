@@ -12,6 +12,7 @@
             <el-menu-item index="security">安全设置</el-menu-item>
             <el-menu-item index="ldap">LDAP 设置</el-menu-item>
             <el-menu-item index="password">用户密码策略</el-menu-item>
+            <el-menu-item index="certificate">证书管理</el-menu-item>
             <el-menu-item index="sms">短信配置</el-menu-item>
             <el-menu-item index="mail">发件服务器</el-menu-item>
             <el-menu-item index="dingtalk">钉钉应用</el-menu-item>
@@ -27,6 +28,7 @@
           <security-form v-if="currentMenu === 'security'" :form="settings" @submit="handleSubmit" />
           <ldap-form v-if="currentMenu === 'ldap'" :form="settings" @submit="handleSubmit" />
           <password-form v-if="currentMenu === 'password'" :form="settings" @submit="handleSubmit" />
+          <Certificate-form v-if="currentMenu === 'certificate'" :form="settings" @submit="handleSubmit" />
           <sms-form v-if="currentMenu === 'sms'" :form="settings" @submit="handleSubmit" />
           <mail-form v-if="currentMenu === 'mail'" :form="settings" @submit="handleSubmit" />
           <dingtalk-form v-if="currentMenu === 'dingtalk'" :form="settings" @submit="handleSubmit" />
@@ -50,6 +52,7 @@ import WechatForm from './wechat'
 import PasswordForm from './password'
 import SmsForm from './sms'
 import SiteForm from './site'
+import CertificateForm from './certificate'
 import MailForm from './mail'
 import About from './about'
 
@@ -64,6 +67,7 @@ export default {
     SiteForm,
     MailForm,
     SmsForm,
+    CertificateForm,
     About
   },
   data() {
@@ -76,6 +80,7 @@ export default {
         logo: '',
         mfa: false,
         issuer: '',
+        secret: '',
         ldapAddress: '',
         ldapBindDn: '',
         ldapBindPassword: '',
@@ -85,7 +90,11 @@ export default {
         passwordExpireDays: '',
         passwordLength: '',
         passwordComplexity: [],
-        passwordExpiryReminderDays: ''
+        passwordExpiryReminderDays: '',
+        mailAddress: '',
+        mailPort: '',
+        mailForm: '',
+        mailPassword: ''
       }
     }
   },

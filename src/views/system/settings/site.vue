@@ -1,10 +1,10 @@
 <template>
   <div>
     <h3>站点基本配置</h3>
-    <el-form ref="form" :model="form" label-position="top" label-width="100px">
-      <el-form-item label="访问站点 URL">
-        <el-input v-model="form.externalUrl" autocomplete="off" size="small" clearable style="width: 600px" />
-        <div class="help-block" style="color: #999; font-size: 12px">为实际外部访问的 URL, 用于系统回调和 SSO 相关功能, 格式为: http[s]://&lt;address&gt;[:&lt;port&gt;]。</div>
+    <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" status-icon label-position="top" label-width="100px">
+      <el-form-item label="访问站点 URL" prop="externalUrl">
+        <el-input v-model="form.externalUrl" autocomplete="off" size="small" clearable />
+        <div class="help-block" style="color: #999; font-size: 12px">重要，应设置为实际外部访问的 URL, 用于系统回调和 SSO 相关功能, 格式为: http[s]://&lt;address&gt;[:&lt;port&gt;]，你还可以尝试点击《<el-link :underline="false" type="primary" style="font-size: 12px" @click="handleGetBaseUrl">获取</el-link>》当前访问 URL。</div>
       </el-form-item>
       <el-form-item label="站点 Logo">
         <el-upload
@@ -48,8 +48,17 @@ export default {
   },
   data() {
     return {
+      baseUrl() {
+        const port = window.location.port ? `:${window.location.port}` : ''
+        return `${window.location.protocol}//${window.location.hostname}${port}`
+      },
       token: getToken(),
-      logoFileList: []
+      logoFileList: [],
+      rules: {
+        externalUrl: [
+          { required: true, message: '请输入站点访问URL', trigger: 'change' }
+        ]
+      }
     }
   },
   computed: {
@@ -65,6 +74,11 @@ export default {
   methods: {
     uploadUrl(type) {
       return this.baseUploadUrl + `${type}Upload`
+    },
+
+    /* 获取站点访问 URL */
+    handleGetBaseUrl() {
+      this.form.externalUrl = this.baseUrl()
     },
 
     /* Logo 上传成功回调 */
@@ -90,8 +104,13 @@ export default {
 
     /* 提交表单 */
     handleSubmit() {
-      const data = { externalUrl: this.form.externalUrl }
-      this.$emit('submit', data)
+      this.$refs.form.validate(valid => {
+        if (!valid) {
+          return
+        }
+        const data = { externalUrl: this.form.externalUrl }
+        this.$emit('submit', data)
+      })
     }
   }
 }
@@ -116,5 +135,12 @@ export default {
   .el-upload:hover {
     border-color: #409EFF;
   }
+}
+</style>
+<style scoped>
+.help-block {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  line-height: 1.5;
 }
 </style>
