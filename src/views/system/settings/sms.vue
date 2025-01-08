@@ -1,6 +1,18 @@
 <template>
   <div>
     <h3>短信配置</h3>
+    <el-alert
+      title="重要提示"
+      type="warning"
+      show-icon
+      style="margin-bottom: 10px;"
+    >
+      <slot name="description">
+        <div>IDSphere 平台短信功能在用户重置密码和获取敏感数据时使用，是可选的，推荐短信模板如下：</div>
+        <div>华为云：您的验证码为：${code}，验证码在5分钟内有效，请勿泄漏他人！</div>
+        <div>阿里云：您的验证码为：${1}，验证码在5分钟内有效，请勿泄漏他人！</div>
+      </slot>
+    </el-alert>
     <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" status-icon label-position="top" label-width="100px">
       <el-form-item label="短信提供商" prop="smsProvider">
         <el-radio-group v-model="form.smsProvider">
@@ -17,6 +29,7 @@
         <el-col :span="16">
           <el-form-item label="接入地址" prop="smsEndpoint">
             <el-input v-model="form.smsEndpoint" autocomplete="off" size="small" clearable />
+            <div class="help-block" style="color: #999; font-size: 12px">华为云参考《<a href="https://support.huaweicloud.com/api-msgsms/sms_05_0000.html#section1" target="_blank" style="color: #66b1ff">API 请求地址</a>》配置，阿里云参考《<a href="https://help.aliyun.com/zh/sms/developer-reference/api-dysmsapi-2017-05-25-endpoint" target="_blank" style="color: #66b1ff">短信服务接入点</a>》配置。</div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -35,12 +48,12 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-form-item label="App Key" prop="smsAppKey">
+          <el-form-item label="App Key（AccessKey ID）" prop="smsAppKey">
             <el-input v-model="form.smsAppKey" autocomplete="off" size="small" clearable />
           </el-form-item>
         </el-col>
         <el-col :span="16">
-          <el-form-item label="App Secret" prop="smsAppSecret">
+          <el-form-item label="App Secret（AccessKey Secret）" prop="smsAppSecret">
             <el-input v-if="showPassword" v-model="form.smsAppSecret" type="password" show-password autocomplete="off" size="small" clearable />
             <el-button v-else type="primary" size="mini" @click="handlePasswordUpdate">点击设置 AppSecret</el-button>
           </el-form-item>

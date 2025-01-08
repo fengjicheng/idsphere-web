@@ -4,13 +4,16 @@
     <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" status-icon label-position="top" label-width="100px">
       <el-form-item label="Corp ID" prop="wechatCorpId">
         <el-input v-model="form.wechatCorpId" autocomplete="off" size="small" clearable style="width: 600px;" />
+        <div class="help-block" style="color: #999; font-size: 12px">登录《<a href="https://work.weixin.qq.com" target="_blank" style="color: #66b1ff">企业微信管理后台</a>》，在上方【我的企业】中获取。</div>
       </el-form-item>
       <el-form-item label="Agent ID" prop="wechatAgentId">
         <el-input v-model="form.wechatAgentId" autocomplete="off" size="small" clearable style="width: 600px;" />
+        <div class="help-block" style="color: #999; font-size: 12px">登录《<a href="https://work.weixin.qq.com" target="_blank" style="color: #66b1ff">企业微信管理后台</a>》，在创建的企业自建应用详情页中获取。</div>
       </el-form-item>
       <el-form-item label="Secret" prop="wechatSecret">
         <el-input v-if="showPassword" v-model="form.wechatSecret" type="password" show-password autocomplete="off" size="small" clearable style="width: 600px;" />
         <el-button v-else type="primary" size="mini" @click="handlePasswordUpdate">点击设置 AppSecret</el-button>
+        <div class="help-block" style="color: #999; font-size: 12px">登录《<a href="https://work.weixin.qq.com" target="_blank" style="color: #66b1ff">企业微信管理后台</a>》，在创建的企业自建应用详情页中获取。</div>
       </el-form-item>
       <el-form-item>
         <div>

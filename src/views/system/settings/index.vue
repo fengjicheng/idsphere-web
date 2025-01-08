@@ -12,7 +12,7 @@
             <el-menu-item index="security">安全设置</el-menu-item>
             <el-menu-item index="ldap">LDAP 设置</el-menu-item>
             <el-menu-item index="password">用户密码策略</el-menu-item>
-            <el-menu-item index="certificate">证书管理</el-menu-item>
+            <el-menu-item index="certificate">密钥证书管理</el-menu-item>
             <el-menu-item index="sms">短信配置</el-menu-item>
             <el-menu-item index="mail">发件服务器</el-menu-item>
             <el-menu-item index="dingtalk">钉钉应用</el-menu-item>

@@ -4,10 +4,12 @@
     <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" status-icon label-position="top" label-width="100px">
       <el-form-item label="App Key" prop="dingdingAppKey">
         <el-input v-model="form.dingdingAppKey" autocomplete="off" size="small" clearable style="width: 600px;" />
+        <div class="help-block" style="color: #999; font-size: 12px">登录《<a href="https://open.dingtalk.com" target="_blank" style="color: #66b1ff">钉钉开放平台</a>》，在创建的企业自建应用详情页中，从左侧的【凭证与基础信息】中获取。</div>
       </el-form-item>
       <el-form-item label="App Secret" prop="dingdingAppSecret">
         <el-input v-if="showPassword" v-model="form.dingdingAppSecret" type="password" show-password autocomplete="off" size="small" clearable style="width: 600px;" />
         <el-button v-else type="primary" size="mini" @click="handlePasswordUpdate">点击设置 AppSecret</el-button>
+        <div class="help-block" style="color: #999; font-size: 12px">登录《<a href="https://open.dingtalk.com" target="_blank" style="color: #66b1ff">钉钉开放平台</a>》，在创建的企业自建应用详情页中，从左侧的【凭证与基础信息】中获取。</div>
       </el-form-item>
       <el-form-item>
         <div>

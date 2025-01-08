@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>证书及密钥管理</h3>
+    <h3>密钥证书管理</h3>
     <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" status-icon label-position="top" label-width="100px">
       <el-alert
         title="警告"
