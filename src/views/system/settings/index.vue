@@ -1,11 +1,12 @@
 <template>
   <div class="settings-wrapper">
     <div class="settings-container">
-      <el-row>
+      <el-row class="equal-height-row">
         <!-- 左侧导航菜单 -->
         <el-col :span="6">
           <el-menu
             :default-active="currentMenu"
+            style="height: 100%;"
             @select="handleMenuSelect"
           >
             <el-menu-item index="site">站点基本配置</el-menu-item>
@@ -135,5 +136,10 @@ export default {
   padding-left: 30px;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.equal-height-row {
+  display: flex;
+  align-items: stretch;
 }
 </style>
