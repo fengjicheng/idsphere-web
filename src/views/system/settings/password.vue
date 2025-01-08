@@ -86,7 +86,7 @@ export default {
           passwordComplexity: JSON.stringify(passwordComplexity),
           passwordExpiryReminderDays: String(passwordExpiryReminderDays)
         }
-        this.$emit('submit', data)
+        this.$emit('submit', data, (result) => {})
       })
     }
   }

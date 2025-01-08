@@ -75,27 +75,7 @@ export default {
       // 默认菜单
       currentMenu: 'site',
       // 配置信息
-      settings: {
-        externalUrl: '',
-        logo: '',
-        mfa: false,
-        issuer: '',
-        secret: '',
-        ldapAddress: '',
-        ldapBindDn: '',
-        ldapBindPassword: '',
-        ldapSearchDn: '',
-        ldapFilterAttribute: '',
-        ldapUserPasswordExpireDays: '',
-        passwordExpireDays: '',
-        passwordLength: '',
-        passwordComplexity: [],
-        passwordExpiryReminderDays: '',
-        mailAddress: '',
-        mailPort: '',
-        mailForm: '',
-        mailPassword: ''
-      }
+      settings: {}
     }
   },
   activated() {
@@ -117,8 +97,12 @@ export default {
     },
 
     /* 表单提交 */
-    handleSubmit(data) {
+    handleSubmit(data, callback) {
       updateSettings(data).then((res) => {
+        // 将执行的结果先返回给子组件
+        callback(res)
+
+        // 处理返回
         if (res.code === 0) {
           Message({
             message: res.msg,

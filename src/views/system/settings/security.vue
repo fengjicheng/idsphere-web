@@ -57,7 +57,7 @@ export default {
           return
         }
         const { mfa, issuer, secret } = this.form
-        this.$emit('submit', { mfa: mfa ? 'true' : 'false', issuer: issuer, secret: secret })
+        this.$emit('submit', { mfa: mfa ? 'true' : 'false', issuer: issuer, secret: secret }, (result) => {})
       })
     }
   }

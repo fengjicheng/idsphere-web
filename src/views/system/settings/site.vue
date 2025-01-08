@@ -109,7 +109,7 @@ export default {
           return
         }
         const data = { externalUrl: this.form.externalUrl }
-        this.$emit('submit', data)
+        this.$emit('submit', data, (result) => {})
       })
     }
   }

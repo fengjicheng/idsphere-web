@@ -12,11 +12,9 @@
       <el-form-item label="发件邮箱账号" prop="mailForm">
         <el-input v-model="form.mailForm" autocomplete="off" size="small" clearable style="width: 600px" />
       </el-form-item>
-      <el-form-item v-if="showPassword" label="发件邮箱密码" prop="mailPassword">
-        <el-input v-model="form.mailPassword" type="password" show-password autocomplete="off" size="small" clearable style="width: 600px" />
-      </el-form-item>
-      <el-form-item v-else label="发件邮箱密码">
-        <el-button type="primary" size="mini" @click="handlePasswordUpdate">点击设置密码</el-button>
+      <el-form-item label="发件邮箱密码" prop="mailPassword">
+        <el-input v-if="showPassword" v-model="form.mailPassword" type="password" show-password autocomplete="off" size="small" clearable style="width: 600px" />
+        <el-button v-else type="primary" size="mini" @click="handlePasswordUpdate">点击设置密码</el-button>
       </el-form-item>
       <el-form-item>
         <div>
@@ -78,8 +76,18 @@ export default {
           { required: true, message: '请输入发件邮箱地址', trigger: 'change' }
         ],
         mailPassword: [
-          { required: true, message: '请输入发件邮箱密码', trigger: 'change' }
+          { required: false, message: '请输入发件邮箱密码', trigger: 'change' }
         ]
+      }
+    }
+  },
+  watch: {
+    'showPassword'(val) {
+      if (val) {
+        this.rules.mailPassword[0].required = true
+      } else {
+        this.rules.mailPassword[0].required = false
+        this.$refs.form.clearValidate()
       }
     }
   },
@@ -111,7 +119,11 @@ export default {
         if (mailPassword) {
           data.mailPassword = mailPassword
         }
-        this.$emit('submit', data)
+        this.$emit('submit', data, (result) => {
+          if (result.code === 0) {
+            this.showPassword = false
+          }
+        })
       })
     },
 

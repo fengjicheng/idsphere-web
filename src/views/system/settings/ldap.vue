@@ -46,11 +46,9 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item v-if="showPassword" label="Bind 用户密码" prop="ldapBindPassword">
-        <el-input v-model="form.ldapBindPassword" type="password" show-password autocomplete="off" size="small" clearable />
-      </el-form-item>
-      <el-form-item v-else label="Bind 用户密码">
-        <el-button type="primary" size="mini" @click="handlePasswordUpdate">点击设置密码</el-button>
+      <el-form-item label="Bind 用户密码" prop="ldapBindPassword">
+        <el-input v-if="showPassword" v-model="form.ldapBindPassword" type="password" show-password autocomplete="off" size="small" clearable />
+        <el-button v-else type="primary" size="mini" @click="handlePasswordUpdate">点击设置密码</el-button>
       </el-form-item>
       <el-form-item>
         <div>
@@ -113,7 +111,7 @@ export default {
           { required: true, message: '请输入绑定的用户 DN', trigger: 'change' }
         ],
         ldapBindPassword: [
-          { required: true, message: '请输入绑定用户的密码', trigger: 'change' }
+          { required: false, message: '请输入绑定用户的密码', trigger: 'change' }
         ],
         ldapSearchDn: [
           { required: true, message: '请输入查找范围', trigger: 'change' }
@@ -124,6 +122,16 @@ export default {
         ldapUserPasswordExpireDays: [
           { required: true, message: '请输入密码过期天数', trigger: 'change' }
         ]
+      }
+    }
+  },
+  watch: {
+    'showPassword'(val) {
+      if (val) {
+        this.rules.ldapBindPassword[0].required = true
+      } else {
+        this.rules.ldapBindPassword[0].required = false
+        this.$refs.form.clearValidate()
       }
     }
   },
@@ -155,7 +163,11 @@ export default {
         if (ldapBindPassword) {
           data.ldapBindPassword = ldapBindPassword
         }
-        this.$emit('submit', data)
+        this.$emit('submit', data, (result) => {
+          if (result.code === 0) {
+            this.showPassword = false
+          }
+        })
       })
     },
 

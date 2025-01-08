@@ -76,7 +76,7 @@ export default {
           return
         }
         const { certificate, publicKey, privateKey } = this.form
-        this.$emit('submit', { certificate: certificate, publicKey: publicKey, privateKey: privateKey })
+        this.$emit('submit', { certificate: certificate, publicKey: publicKey, privateKey: privateKey }, (result) => {})
       })
     }
   }
