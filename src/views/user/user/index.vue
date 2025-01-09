@@ -74,17 +74,6 @@
       :close-on-click-modal="false"
       @closed="handleClose"
     >
-      <el-alert
-        type="warning"
-        show-icon
-        :closable="false"
-      >
-        <template slot="title">
-          <div class="iconSize">密码复杂度要求如下：</div>
-          <div class="iconSize">1、长度不少于10位</div>
-          <div class="iconSize">2、必须包含大小写字母、数字和特殊符号，且每种类型字符的长度不小于2</div>
-        </template>
-      </el-alert>
       <!-- 表单组件 -->
       <reset-user-password-form
         ref="form"

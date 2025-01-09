@@ -28,18 +28,6 @@
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click="isValidate('form')">{{ value }}</el-button>
-
-      <el-alert
-        type="warning"
-        show-icon
-        :closable="false"
-      >
-        <template slot="title">
-          <div class="iconSize">密码复杂度要求如下：</div>
-          <div class="iconSize">1、长度不少于10位</div>
-          <div class="iconSize">2、必须包含大小写字母、数字和特殊符号，且每种类型字符的长度不小于2</div>
-        </template>
-      </el-alert>
     </el-form>
   </div>
 </template>
