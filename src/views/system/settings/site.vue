@@ -4,7 +4,11 @@
     <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" status-icon label-position="top" label-width="100px">
       <el-form-item label="访问站点 URL" prop="externalUrl">
         <el-input v-model="form.externalUrl" autocomplete="off" size="small" clearable />
-        <div class="help-block" style="color: #999; font-size: 12px">重要，应设置为实际外部访问的 URL, 用于系统回调和 SSO 相关功能, 格式为: http[s]://&lt;address&gt;[:&lt;port&gt;]，你还可以尝试点击《<el-link :underline="false" type="primary" style="font-size: 12px" @click="handleGetBaseUrl">获取</el-link>》当前访问 URL。</div>
+        <div class="help-block" style="color: #999; font-size: 12px">重要，应设置为实际外部访问的 URL, 应用于系统回调和 SSO 相关功能, 格式为: http[s]://&lt;address&gt;[:&lt;port&gt;]，你还可以尝试点击《<el-link :underline="false" type="primary" style="font-size: 12px" @click="handleGetBaseUrl">获取</el-link>》当前访问 URL。</div>
+      </el-form-item>
+      <el-form-item label="Swagger 接口文档" prop="swagger">
+        <el-switch v-model="form.swagger" />
+        <div class="help-block" style="color: #999; font-size: 12px;">如果是生产环境建议关闭，此配置项修改后需要重启后端服务生效。</div>
       </el-form-item>
       <el-form-item label="站点 Logo">
         <el-upload
@@ -108,7 +112,7 @@ export default {
         if (!valid) {
           return
         }
-        const data = { externalUrl: this.form.externalUrl }
+        const data = { externalUrl: this.form.externalUrl, swagger: this.form.swagger ? 'true' : 'false' }
         this.$emit('submit', data, (result) => {})
       })
     }

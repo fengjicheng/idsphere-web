@@ -8,12 +8,24 @@
       </el-form-item>
       <el-form-item label="提供商名称" prop="issuer">
         <el-input v-model="form.issuer" autocomplete="off" size="small" clearable style="width: 600px" />
-        <div class="help-block" style="color: #999; font-size: 12px">身份验证器扫码后显示的名称，也作为 SSO  提供商对外信息展示。</div>
+        <div class="help-block" style="color: #999; font-size: 12px">身份验证器扫码后显示的名称。</div>
       </el-form-item>
-      <el-form-item label="安全密钥" prop="secret">
-        <el-input v-model="form.secret" autocomplete="off" size="small" clearable style="width: 600px" />
-        <div class="help-block" style="color: #999; font-size: 12px">建议更改，用于 CAS 3.0 票据签名，可使用其它任务字符串。</div>
-      </el-form-item>
+      <el-row :gutter="20">
+        <el-col :span="14">
+          <el-form-item label="安全密钥" prop="secret">
+            <el-input v-model="form.secret" autocomplete="off" size="small" clearable />
+            <div class="help-block" style="color: #999; font-size: 12px">建议更改，用于 CAS 3.0 票据签名，可使用其它任务字符串。</div>
+          </el-form-item>
+        </el-col>
+        <el-col :span="10">
+          <el-form-item label="Token 有效期" prop="tokenExpiresTime">
+            <el-input v-model="form.tokenExpiresTime" autocomplete="off" size="small" clearable>
+              <template slot="append">单位（小时）</template>
+            </el-input>
+            <div class="help-block" style="color: #999; font-size: 12px">作用于用户登录成功后 JWT Token 的有效期。</div>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-form-item>
         <div>
           <el-button type="primary" size="mini" @click="handleSubmit">确 定</el-button>
@@ -43,6 +55,9 @@ export default {
         issuer: [
           { required: true, message: '请输入提供商名称', trigger: 'change' }
         ],
+        tokenExpiresTime: [
+          { required: true, message: '请输入 Token 有效期', trigger: 'change' }
+        ],
         secret: [
           { required: true, message: '请输入安全密钥', trigger: 'change' }
         ]
@@ -56,8 +71,8 @@ export default {
         if (!valid) {
           return
         }
-        const { mfa, issuer, secret } = this.form
-        this.$emit('submit', { mfa: mfa ? 'true' : 'false', issuer: issuer, secret: secret }, (result) => {})
+        const { mfa, issuer, secret, tokenExpiresTime } = this.form
+        this.$emit('submit', { mfa: mfa ? 'true' : 'false', issuer: issuer, secret: secret, tokenExpiresTime: tokenExpiresTime }, (result) => {})
       })
     }
   }
