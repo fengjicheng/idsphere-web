@@ -65,15 +65,39 @@
       </el-form-item>
       <el-form-item>
         <div>
+          <el-button size="mini" @click="handleTest">发送短信测试</el-button>
           <el-button type="primary" size="mini" @click="handleSubmit">确 定</el-button>
         </div>
       </el-form-item>
     </el-form>
+
+    <!-- 短信发送测试 -->
+    <el-dialog
+      v-if="testDialog"
+      :title="formTitle"
+      :visible.sync="testDialog"
+      :show-close="false"
+      width="500px"
+      :close-on-click-modal="false"
+      @closed="handleClose"
+    >
+      <!-- 表单组件 -->
+      <sms-test-form
+        ref="form"
+        :form="currentValue"
+        @close="handleClose"
+      />
+    </el-dialog>
   </div>
 </template>
 <script>
+import SmsTestForm from './sms-test'
+
 export default {
   name: 'SmsForm',
+  components: {
+    SmsTestForm
+  },
   props: {
     form: {
       type: Object,
@@ -88,6 +112,9 @@ export default {
         const port = window.location.port ? `:${window.location.port}` : ''
         return `${window.location.protocol}//${window.location.hostname}${port}`
       },
+      testDialog: false,
+      formTitle: '',
+      currentValue: undefined,
       showPassword: false,
       rules: {
         smsProvider: [
@@ -139,6 +166,12 @@ export default {
   },
   methods: {
 
+    /* 发件测试 */
+    handleTest() {
+      this.formTitle = '发送短信测试'
+      this.testDialog = true
+    },
+
     /* 获取回调接口 */
     getCallbackUrl() {
       this.form.smsCallbackUrl = `${this.baseUrl()}/api/v1/sms/huawei/callback`
@@ -174,6 +207,12 @@ export default {
           }
         })
       })
+    },
+
+    /* 关闭表单 */
+    handleClose() {
+      this.testDialog = false
+      this.currentValue = undefined
     }
   }
 }

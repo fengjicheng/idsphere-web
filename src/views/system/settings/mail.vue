@@ -18,7 +18,7 @@
       </el-form-item>
       <el-form-item>
         <div>
-          <el-button size="mini" @click="handleTest">发件测试</el-button>
+          <el-button size="mini" @click="handleTest">发件邮件测试</el-button>
           <el-button type="primary" size="mini" @click="handleSubmit">确 定</el-button>
         </div>
       </el-form-item>

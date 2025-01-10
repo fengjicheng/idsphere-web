@@ -1,7 +1,7 @@
 <template>
   <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" label-position="right" label-width="100px" style="width: 95%;padding-top: 20px;">
-    <el-form-item label="收件地址：" prop="receiver">
-      <el-input v-model="form.receiver" autocomplete="off" clearable />
+    <el-form-item label="手机号：" prop="phone_number">
+      <el-input v-model="form.phone_number" autocomplete="off" clearable />
     </el-form-item>
     <el-form-item>
       <div>
@@ -13,17 +13,14 @@
 </template>
 
 <script>
-import { Message } from 'element-ui'
-import { sendMail } from '@/api/system/settings'
-
 export default {
-  name: 'MailTestForm',
+  name: 'SmsTestForm',
   props: {
     form: {
       type: Object,
       default() {
         return {
-          receiver: ''
+          phone_number: ''
         }
       }
     }
@@ -32,8 +29,8 @@ export default {
     return {
       loading: false,
       rules: {
-        receiver: [
-          { required: true, message: '请输入收件人地址', trigger: 'change' }
+        phone_number: [
+          { required: true, message: '请输入接收短信手机号', trigger: 'change' }
         ]
       }
     }
@@ -46,28 +43,9 @@ export default {
         if (!valid) {
           return
         }
-        // 开始加载
+        // 执行登录测试
         this.loading = true
-        sendMail(this.form).then((res) => {
-          if (res.code === 0) {
-            Message({
-              message: res.msg,
-              type: 'success',
-              duration: 1000
-            })
-          } else {
-            Message({
-              message: res.msg,
-              type: 'error',
-              duration: 2000
-            })
-            this.loading = false
-          }
-        }).catch(() => {
-          this.loading = false
-        }).finally(() => {
-          this.loading = false
-        })
+        this.loading = false
       })
     },
 

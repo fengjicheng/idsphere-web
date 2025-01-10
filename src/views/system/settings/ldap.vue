@@ -52,7 +52,7 @@
       </el-form-item>
       <el-form-item>
         <div>
-          <el-button size="mini" @click="handleTest">登录测试</el-button>
+          <el-button size="mini" @click="handleTest">用户登录测试</el-button>
           <el-button type="primary" size="mini" @click="handleSubmit">确 定</el-button>
         </div>
       </el-form-item>
@@ -60,9 +60,9 @@
 
     <!-- 登录测试 -->
     <el-dialog
-      v-if="loginDialog"
+      v-if="testDialog"
       :title="formTitle"
-      :visible.sync="loginDialog"
+      :visible.sync="testDialog"
       :show-close="false"
       width="500px"
       :close-on-click-modal="false"
@@ -100,7 +100,7 @@ export default {
         return `${window.location.protocol}//${window.location.hostname}${port}`
       },
       showPassword: false,
-      loginDialog: false,
+      testDialog: false,
       formTitle: '',
       currentValue: undefined,
       rules: {
@@ -139,7 +139,7 @@ export default {
     /* 打开表单 */
     handleTest() {
       this.formTitle = '登录测试'
-      this.loginDialog = true
+      this.testDialog = true
     },
 
     /* 更新密码按钮 */
@@ -173,7 +173,7 @@ export default {
 
     /* 关闭表单 */
     handleClose() {
-      this.loginDialog = false
+      this.testDialog = false
       this.currentValue = undefined
     }
   }

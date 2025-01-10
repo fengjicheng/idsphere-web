@@ -24,3 +24,30 @@ export function updateSettings(data) {
     data
   })
 }
+
+// 发送测试邮件
+export function sendMail(data) {
+  return request({
+    url: '/api/v1/settings/test/mailSend',
+    method: 'post',
+    data
+  })
+}
+
+// 发送测试短信
+export function sendSms(data) {
+  return request({
+    url: '/api/v1/settings/test/smsSend',
+    method: 'post',
+    data
+  })
+}
+
+// LDAP 登录测试
+export function ldapLogin(data) {
+  return request({
+    url: '/api/v1/settings/test/ldapLogin',
+    method: 'post',
+    data
+  })
+}
