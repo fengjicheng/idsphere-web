@@ -16,6 +16,9 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
+import { ldapLogin } from '@/api/system/settings'
+
 export default {
   name: 'LoginForm',
   props: {
@@ -50,9 +53,28 @@ export default {
         if (!valid) {
           return
         }
-        // 执行登录测试
+        // 执行测试
         this.loading = true
-        this.loading = false
+        ldapLogin(this.form).then((res) => {
+          if (res.code === 0) {
+            Message({
+              message: res.msg,
+              type: 'success',
+              duration: 1000
+            })
+          } else {
+            Message({
+              message: res.msg,
+              type: 'error',
+              duration: 2000
+            })
+            this.loading = false
+          }
+        }).catch(() => {
+          this.loading = false
+        }).finally(() => {
+          this.loading = false
+        })
       })
     },
 

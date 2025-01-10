@@ -70,34 +70,14 @@
         </div>
       </el-form-item>
     </el-form>
-
-    <!-- 短信发送测试 -->
-    <el-dialog
-      v-if="testDialog"
-      :title="formTitle"
-      :visible.sync="testDialog"
-      :show-close="false"
-      width="500px"
-      :close-on-click-modal="false"
-      @closed="handleClose"
-    >
-      <!-- 表单组件 -->
-      <sms-test-form
-        ref="form"
-        :form="currentValue"
-        @close="handleClose"
-      />
-    </el-dialog>
   </div>
 </template>
 <script>
-import SmsTestForm from './sms-test'
+import { Message } from 'element-ui'
+import { sendSms } from '@/api/system/settings'
 
 export default {
   name: 'SmsForm',
-  components: {
-    SmsTestForm
-  },
   props: {
     form: {
       type: Object,
@@ -112,9 +92,6 @@ export default {
         const port = window.location.port ? `:${window.location.port}` : ''
         return `${window.location.protocol}//${window.location.hostname}${port}`
       },
-      testDialog: false,
-      formTitle: '',
-      currentValue: undefined,
       showPassword: false,
       rules: {
         smsProvider: [
@@ -168,8 +145,23 @@ export default {
 
     /* 发件测试 */
     handleTest() {
-      this.formTitle = '发送短信测试'
-      this.testDialog = true
+      this.$confirm('点击确认短信默认发送至当前配置的手机号，短信发送状态请移步至【日志审计】-【短信记录】中查看', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        showClose: false,
+        closeOnClickModal: false
+      }).then(() => {
+        sendSms().then((res) => {
+          if (res.code === 0) {
+            Message({
+              message: res.msg,
+              type: 'success',
+              duration: 1000
+            })
+          }
+        })
+      }).catch(() => {})
     },
 
     /* 获取回调接口 */
