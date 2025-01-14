@@ -6,7 +6,7 @@
         title="警告"
         type="error"
         show-icon
-        description="更换证书会导致使用 SAML2 协议接入的站点无法登录，需要对 SAML2 SP 进行手动替换。可能会导致用户密码无法解密（影响登录）、系统配置中的敏感信息无法解密（如：LDAP 绑定用户密码、发件邮箱密码等）和资产账号密码无法解密，在替换新证书前请务必手工完成旧证书和数据库的备份。"
+        description="更换证书后需要对使用 SAML2 协议对接的站点手动进行证书替换，在更换过程中会自动对数据库中使用了密钥加密的数据进行更新，为防止意外，请在在更换前请务必手工完成旧证书、密钥和数据库的备份，证书更换完成后务必进行相关功能验证。"
         style="margin-bottom: 10px;"
       />
       <el-alert
@@ -16,7 +16,7 @@
         style="margin-bottom: 10px;"
       >
         <slot name="description">
-          证书和密钥将影响数据库敏感信息加密和 SAML2 认证，如果未上传证书和密钥，IDSphere 平台将会使用默认的证书和密钥。为避免敏感信息泄露，生产环境强烈建议使用自定义的证书和密钥，可以使用《<a href="https://www.qvdv.net/tools/qvdv-csrpfx.html" target="_blank" style="color: red">在线生成工具</a>》制作自定义证书及密钥。
+          证书和密钥将用于数据库敏感信息加密和 SAML2 SP 认证，为避免敏感信息泄露，生产环境强烈建议使用自定义的证书和密钥，可以使用《<a href="https://www.qvdv.net/tools/qvdv-csrpfx.html" target="_blank" style="color: red">在线生成工具</a>》制作自定义证书及密钥。
         </slot>
       </el-alert>
       <el-form-item label="证书" prop="certificate">
@@ -102,7 +102,7 @@ export default {
           return
         }
         const { certificate, publicKey, privateKey } = this.form
-        this.$emit('submit', { certificate: certificate, publicKey: publicKey, privateKey: privateKey }, (result) => {})
+        this.$emit('sub', { certificate: certificate, publicKey: publicKey, privateKey: privateKey }, (result) => {})
       })
     }
   }

@@ -25,6 +25,15 @@ export function updateSettings(data) {
   })
 }
 
+// 密钥及证书更换
+export function updateCert(data) {
+  return request({
+    url: '/api/v1/settings/cert',
+    method: 'put',
+    data
+  })
+}
+
 // 发送测试邮件
 export function sendMail(data) {
   return request({
