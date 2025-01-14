@@ -36,6 +36,7 @@
       </el-form-item>
       <el-form-item>
         <div>
+          <el-button size="mini" :loading="loading" @click="handleTest">密钥及证书测试</el-button>
           <el-button type="primary" size="mini" @click="handleSubmit">确 定</el-button>
         </div>
       </el-form-item>
@@ -43,6 +44,8 @@
   </div>
 </template>
 <script>
+import { certTest } from '@/api/system/settings'
+
 export default {
   name: 'CertificateForm',
   props: {
@@ -55,6 +58,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       rules: {
         certificate: [
           { required: true, message: '请上传证书', trigger: 'change' }
@@ -69,6 +73,28 @@ export default {
     }
   },
   methods: {
+    /* 密钥测试 */
+    handleTest() {
+      this.$refs.form.validate(valid => {
+        if (!valid) {
+          return
+        }
+        this.loading = true // 开启加载状态
+        const { certificate, publicKey, privateKey } = this.form
+        certTest({ certificate: certificate, publicKey: publicKey, privateKey: privateKey }).then(res => {
+          if (res.code === 0) {
+            this.$message({
+              message: res.msg,
+              type: 'success',
+              duration: 1000
+            })
+          }
+        }).catch(res => {}).finally(() => {
+          this.loading = false
+        })
+      })
+    },
+
     /* 提交表单 */
     handleSubmit() {
       this.$refs.form.validate(valid => {

@@ -145,23 +145,28 @@ export default {
 
     /* 发件测试 */
     handleTest() {
-      this.$confirm('点击确认短信默认发送至当前配置的手机号，短信发送状态请移步至【日志审计】-【短信记录】中查看', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        showClose: false,
-        closeOnClickModal: false
-      }).then(() => {
-        sendSms().then((res) => {
-          if (res.code === 0) {
-            Message({
-              message: res.msg,
-              type: 'success',
-              duration: 1000
-            })
-          }
-        })
-      }).catch(() => {})
+      this.$refs.form.validate(valid => {
+        if (!valid) {
+          return
+        }
+        this.$confirm('点击确认短信默认发送至当前配置的手机号，短信发送状态请移步至【日志审计】-【短信记录】中查看', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          showClose: false,
+          closeOnClickModal: false
+        }).then(() => {
+          sendSms().then((res) => {
+            if (res.code === 0) {
+              Message({
+                message: res.msg,
+                type: 'success',
+                duration: 1000
+              })
+            }
+          })
+        }).catch(() => {})
+      })
     },
 
     /* 获取回调接口 */
