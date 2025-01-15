@@ -16,7 +16,18 @@
         style="margin-bottom: 10px;"
       >
         <slot name="description">
-          证书和密钥将用于数据库敏感信息加密和 SAML2 SP 认证，为避免敏感信息泄露，生产环境强烈建议使用自定义的证书和密钥，可以使用《<a href="https://www.qvdv.net/tools/qvdv-csrpfx.html" target="_blank" style="color: red">在线生成工具</a>》制作自定义证书及密钥。
+          证书和密钥将用于数据库敏感信息加密和 SAML2 SP 认证，为避免敏感信息泄露，生产环境强烈建议使用自定义的证书和密钥，建议使用《<a href="https://www.qvdv.net/tools/qvdv-csrpfx.html" target="_blank" style="color: red">在线生成工具</a>》制作自定义证书及密钥。也可以使用命令生成，命令如下：
+          <div class="gray-bg1">
+            <div>
+              创建私钥：openssl genpkey -algorithm RSA -out private.key -pkeyopt rsa_keygen_bits:2048 -outform PEM
+            </div>
+            <div>
+              创建证书：openssl req -new -x509 -key private.key -out certificate.crt -days 3650
+            </div>
+            <div>
+              从证书中提取公钥：openssl rsa -in private.key -pubout -out public.key
+            </div>
+          </div>
         </slot>
       </el-alert>
       <el-form-item label="证书" prop="certificate">
@@ -113,6 +124,12 @@ export default {
   margin-top: 4px;
   margin-bottom: 4px;
   line-height: 1.5;
+}
+.gray-bg1 {
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  padding: 4px;
+  margin: 2px;
 }
 .gray-bg {
   background-color: #f0f0f0;

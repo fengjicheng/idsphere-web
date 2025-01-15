@@ -9,8 +9,8 @@
     >
       <slot name="description">
         <div>IDSphere 平台短信功能在用户重置密码和获取敏感数据时使用，是可选的，推荐短信模板如下：</div>
-        <div>华为云：您的验证码为：${code}，验证码在5分钟内有效，请勿泄漏他人！</div>
-        <div>阿里云：您的验证码为：${1}，验证码在5分钟内有效，请勿泄漏他人！</div>
+        <div>华为云：您的验证码为：${1}，验证码在5分钟内有效，请勿泄漏他人！</div>
+        <div>阿里云：您的验证码为：${code}，验证码在5分钟内有效，请勿泄漏他人！</div>
       </slot>
     </el-alert>
     <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" status-icon label-position="top" label-width="100px">
