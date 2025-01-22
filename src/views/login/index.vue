@@ -140,7 +140,7 @@ export default {
       }
 
       // 二维码初始化
-      FeishuQrLogin()
+      FeishuQrLogin(query)
     }
   },
   methods: {
@@ -220,6 +220,12 @@ export default {
         ...this.$route.query
       }
 
+      // 如果是 OAuth2.0认证，需要将本地存储的 state 参数带上
+      if ('client_id' in newForm) {
+        newForm.state = getFromLocalStorage('oauth_state')
+      }
+      console.log(newForm)
+
       this.$store.dispatch('user/get_feishu_authorize', newForm).then((res) => {
         // redirect_uri表示SSO客户端在进行单点登录认证
         if (res.redirect_uri !== undefined) {
@@ -252,7 +258,7 @@ export default {
         ...this.$route.query
       }
 
-      // 如果是 OAuth2.0认证，则将 state 参数保存至本地，然后删除 URL 中的 state 参数，防止在进行钉钉、企业微信和飞书扫码时 state 参数重复
+      // 如果是 OAuth2.0认证，则将 state 参数保存至本地，然后删除 URL 中的 state 参数，防止在进行企业微信扫码时 state 参数重复
       if ('state' in newForm) {
         saveToLocalStorage('oauth_state', newForm.state)
         delete newForm.state
