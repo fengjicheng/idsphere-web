@@ -19,8 +19,8 @@
         style="width: 100%;"
       />
     </el-form-item>
-    <el-form-item label="服务提供商：" prop="provider">
-      <el-select v-model="form.provider" placeholder="请选择域名服务提供商" clearable style="width: 100%">
+    <el-form-item label="服务提供商：" prop="domain_service_provider_id">
+      <el-select v-model="form.domain_service_provider_id" placeholder="请选择域名服务提供商" clearable style="width: 100%">
         <el-option v-for="item in provider" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </el-form-item>
@@ -44,7 +44,7 @@ export default {
           name: '',
           registration_at: null,
           expiration_at: null,
-          provider: ''
+          domain_service_provider_id: ''
         }
       }
     },
@@ -70,7 +70,7 @@ export default {
         expiration_at: [
           { required: true, message: '请选择到期时间', trigger: 'change' }
         ],
-        provider: [
+        domain_service_provider_id: [
           { required: true, message: '请选择绑定的域名服务提供商', trigger: 'change' }
         ]
       }

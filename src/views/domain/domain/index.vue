@@ -108,6 +108,7 @@
 <script>
 import { Message } from 'element-ui'
 import { getDomainServiceProviderList, addDomainServiceProvider, deleteDomainServiceProvider, changeDomainServiceProvider } from '@/api/domain/domain'
+import { getDomainList, addDomain, changeDomain, deleteDomain } from '@/api/domain/domain'
 import DomainListTable from './table'
 import DomainAddForm from './form'
 import DomainProviderAddForm from './provider'
@@ -154,13 +155,19 @@ export default {
     /* 查找数据 */
     searchList() {
       this.queryParams.page = 1
+      this.loading = true
       this.getList()
     },
 
-    /* 获取域名服务商 */
+    /* 获取域名服务商和域名 */
     getList() {
       getDomainServiceProviderList().then((res) => {
         this.treeData[0].children = res.data
+      })
+      getDomainList(this.queryParams).then((res) => {
+        this.tableData = res.data.items
+        this.total = res.data.total
+        this.loading = false
       })
     },
 
@@ -295,22 +302,22 @@ export default {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             instance.confirmButtonText = '删除中...'
-            // deleteDomainServiceProvider(rowData).then((res) => {
-            //   if (res.code === 0) {
-            //     Message({
-            //       message: res.msg,
-            //       type: 'success',
-            //       duration: 1000
-            //     })
-            //     instance.confirmButtonLoading = false
-            //     done()
-            //     // 获取最新数据
-            //     this.getList()
-            //   }
-            // }).finally(() => {
-            //   instance.confirmButtonLoading = false
-            //   instance.confirmButtonText = '确定'
-            // })
+            deleteDomain(rowData).then((res) => {
+              if (res.code === 0) {
+                Message({
+                  message: res.msg,
+                  type: 'success',
+                  duration: 1000
+                })
+                instance.confirmButtonLoading = false
+                done()
+                // 获取最新数据
+                this.getList()
+              }
+            }).finally(() => {
+              instance.confirmButtonLoading = false
+              instance.confirmButtonText = '确定'
+            })
           } else {
             done()
           }
@@ -324,34 +331,34 @@ export default {
       // 使用id进行判断，有id表示修改，没有表示新增
       if (formData.id) {
         // 更新域名服务商
-        // changeDomainServiceProvider(formData).then((res) => {
-        //   if (res.code === 0) {
-        //     Message({
-        //       message: res.msg,
-        //       type: 'success',
-        //       duration: 1000
-        //     })
-        //     this.loading = false
-        //     this.handleClose()
-        //   }
-        // }, () => {
-        //   this.loading = false
-        // })
+        changeDomain(formData).then((res) => {
+          if (res.code === 0) {
+            Message({
+              message: res.msg,
+              type: 'success',
+              duration: 1000
+            })
+            this.loading = false
+            this.handleClose()
+          }
+        }, () => {
+          this.loading = false
+        })
       } else {
         // 添加域名服务商
-        // addDomainServiceProvider(formData).then((res) => {
-        //   if (res.code === 0) {
-        //     Message({
-        //       message: res.msg,
-        //       type: 'success',
-        //       duration: 1000
-        //     })
-        //     this.loading = false
-        //     this.handleClose()
-        //   }
-        // }, () => {
-        //   this.loading = false
-        // })
+        addDomain(formData).then((res) => {
+          if (res.code === 0) {
+            Message({
+              message: res.msg,
+              type: 'success',
+              duration: 1000
+            })
+            this.loading = false
+            this.handleClose()
+          }
+        }, () => {
+          this.loading = false
+        })
       }
     },
 
