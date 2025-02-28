@@ -4,7 +4,7 @@
       type="info"
     >
       <slot name="title">
-        域名需要绑定在域名服务提供商下，支持从阿里云、华为云域名服务提供商自动同步域名信息到本地和对域名解析记录管理，另外还可配置《<a :href="baseUrl() + '/system/corn'" target="_blank" style="color: red">定时任务</a>》实现域名定期自动同步以及域名过期提醒。
+        域名需要绑定在域名服务提供商下，支持从阿里云、华为云和腾讯云域名服务提供商自动同步域名信息到本地和对域名解析记录管理，另外还可配置《<a :href="baseUrl() + '/system/corn'" target="_blank" style="color: red">定时任务</a>》实现域名定期自动同步以及域名过期提醒。
       </slot>
     </el-alert>
     <div class="settings-container">
@@ -17,6 +17,7 @@
             :expand-on-click-node="false"
             :render-content="renderContent"
             style="height: auto;"
+            @node-click="handleNodeClick"
           />
           <span v-if="treeData[0].children.length === 0" class="empty-message">请先添加至少一个域名服务提供商</span>
         </el-col>
@@ -86,7 +87,7 @@
             :title="formTitle"
             :visible.sync="domainProviderAddDialog"
             :show-close="false"
-            width="600px"
+            width="650px"
             :close-on-click-modal="false"
             @closed="handleClose"
           >
@@ -141,6 +142,7 @@ export default {
       currentValue: undefined,
       queryParams: {
         name: '',
+        provider_id: '',
         page: 1,
         limit: 15
       },
@@ -156,7 +158,7 @@ export default {
     searchList() {
       this.queryParams.page = 1
       this.loading = true
-      this.getList()
+      this.getDomains()
     },
 
     /* 获取域名服务商和域名 */
@@ -164,6 +166,11 @@ export default {
       getDomainServiceProviderList().then((res) => {
         this.treeData[0].children = res.data
       })
+      this.getDomains()
+    },
+
+    // 获取域名列表
+    getDomains() {
       getDomainList(this.queryParams).then((res) => {
         this.tableData = res.data.items
         this.total = res.data.total
@@ -183,6 +190,16 @@ export default {
       this.getList()
     },
 
+    /* 点击节点树时 */
+    handleNodeClick(data, node) {
+      if (node.level === 1) {
+        this.queryParams.provider_id = ''
+      } else {
+        this.queryParams.provider_id = data.id
+      }
+      this.getDomains()
+    },
+
     /* 节点树右边按钮渲染 */
     renderContent(h, { node, data, store }) {
       return (
@@ -190,13 +207,22 @@ export default {
           <span>{node.label}</span>
           {node.level === 1 && (
             <span>
-              <el-button size='mini' type='text' on-click={ () => this.append() }>新增</el-button>
+              <el-button size='mini' type='text' on-click={ (event) => {
+                event.stopPropagation()
+                this.append(data)
+              }}>新增</el-button>
             </span>
           )}
           {node.level === 2 && (
             <span>
-              <el-button size='mini' type='text' on-click={ () => this.delete(data) }>删除</el-button>
-              <el-button size='mini' type='text' on-click={ () => this.update(data) }>修改</el-button>
+              <el-button size='mini' type='text' on-click={ (event) => {
+                event.stopPropagation()
+                this.delete(data)
+              }}>删除</el-button>
+              <el-button size='mini' type='text' on-click={ (event) => {
+                event.stopPropagation()
+                this.update(data)
+              }}>修改</el-button>
               <el-button size='mini' type='text'>同步</el-button>
             </span>
           )}

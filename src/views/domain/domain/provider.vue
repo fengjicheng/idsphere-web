@@ -7,13 +7,14 @@
       <el-radio-group v-model="form.type">
         <el-radio :label="1">阿里云</el-radio>
         <el-radio :label="2">华为云</el-radio>
-        <el-radio :label="3">其它</el-radio>
+        <el-radio :label="3">腾讯云</el-radio>
+        <el-radio :label="4">其它</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="AccessKey：" prop="access_key">
       <el-input v-if="showAccessKey || form.id === undefined" v-model="form.access_key" show-password autocomplete="off" type="password" clearable />
       <el-button v-else type="primary" size="mini" @click="handleAccessKey">点击更新</el-button>
-      <div class="help-block" style="color: #999; font-size: 12px">用于 API 对接，实现域名同步和域名记录管理，目前仅支持阿里云和华为云</div>
+      <div class="help-block" style="color: #999; font-size: 12px">用于 API 对接，实现域名同步和域名记录管理，目前仅支持阿里云、华为云和腾讯云</div>
     </el-form-item>
     <el-form-item label="SecretKey：" prop="secret_key">
       <el-input v-if="showSecretKey || form.id === undefined" v-model="form.secret_key" show-password autocomplete="off" type="password" clearable />
