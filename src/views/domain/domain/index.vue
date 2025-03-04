@@ -103,6 +103,18 @@
         </el-col>
       </el-row>
     </div>
+
+    <!-- 域名同步规则 -->
+    <el-dialog
+      title="域名同步规则"
+      :visible.sync="domainSyncRuleDialog"
+      :show-close="true"
+      width="700px"
+      :close-on-click-modal="true"
+    >
+      <!-- 表单组件 -->
+      <rule-describe />
+    </el-dialog>
   </div>
 </template>
 
@@ -110,6 +122,7 @@
 import { Message } from 'element-ui'
 import { getDomainServiceProviderList, addDomainServiceProvider, deleteDomainServiceProvider, changeDomainServiceProvider } from '@/api/domain/domain'
 import { getDomainList, addDomain, changeDomain, deleteDomain } from '@/api/domain/domain'
+import RuleDescribe from './rule'
 import DomainListTable from './table'
 import DomainAddForm from './form'
 import DomainProviderAddForm from './provider'
@@ -118,6 +131,7 @@ export default {
   components: {
     DomainListTable,
     DomainAddForm,
+    RuleDescribe,
     DomainProviderAddForm
   },
   data() {
@@ -147,7 +161,8 @@ export default {
         limit: 15
       },
       domainAddDialog: false,
-      domainProviderAddDialog: false
+      domainProviderAddDialog: false,
+      domainSyncRuleDialog: false
     }
   },
   created() {
@@ -223,7 +238,10 @@ export default {
                 event.stopPropagation()
                 this.update(data)
               }}>修改</el-button>
-              <el-button size='mini' type='text'>同步</el-button>
+              <el-button size='mini' type='text' on-click={ (event) => {
+                event.stopPropagation()
+                this.sync(data)
+              }}>同步</el-button>
             </span>
           )}
         </span>
@@ -236,6 +254,55 @@ export default {
       this.domainProviderAddDialog = true
       // 更改Dialog标题
       this.formTitle = '新增域名服务商'
+    },
+
+    /* 同步域名服务商 */
+    sync() {
+      this.$confirm('点击确认将从服务商处同步域名信息到本地，点击了解详细<a href="javascript:;" id="handleRuleDetails" style="color: #66b1ff;">同步规则</a>。', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        showClose: false,
+        closeOnClickModal: false,
+        dangerouslyUseHTMLString: true,
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true
+            instance.confirmButtonText = '同步中...'
+            // userSync().then((res) => {
+            //   if (res.code === 0) {
+            //     Message({
+            //       message: res.msg,
+            //       type: 'success',
+            //       duration: 1000
+            //     })
+            //     instance.confirmButtonLoading = false
+            //     done()
+            //     // 获取最新数据
+            //     this.getList()
+            //   }
+            // }).finally(() => {
+            //   instance.confirmButtonLoading = false
+            //   instance.confirmButtonText = '确定'
+            // })
+          } else {
+            done()
+          }
+        }
+      }).then(() => {}).catch(() => {})
+
+      // 添加事件监听器
+      this.$nextTick(() => {
+        const link = document.getElementById('handleRuleDetails')
+        if (link) {
+          link.addEventListener('click', this.handleRuleDetails)
+        }
+      })
+    },
+
+    /* 打开域名同步规则 */
+    handleRuleDetails() {
+      this.domainSyncRuleDialog = true
     },
 
     /* 修改域名服务商 */
@@ -318,7 +385,7 @@ export default {
 
     /* 删除域名 */
     handleDelete(rowData) {
-      this.$confirm('点击确认当前域名将从系统中永久删除。', '提示', {
+      this.$confirm('点击确认当前域名将从系统中删除，不会从域名服务商处删除。', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',

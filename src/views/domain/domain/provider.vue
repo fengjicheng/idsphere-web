@@ -1,7 +1,8 @@
 <template>
-  <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" label-position="right" label-width="120px" style="width: 95%">
+  <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" size="small" label-position="right" label-width="120px" style="width: 95%">
     <el-form-item label="服务商名称：" prop="name">
       <el-input v-model="form.name" autocomplete="off" clearable />
+      <div class="help-block" style="color: #999; font-size: 12px">此名称不具备实际的意义，主要用于用户识别</div>
     </el-form-item>
     <el-form-item label="服务商类型：" prop="type">
       <el-radio-group v-model="form.type">
@@ -10,6 +11,7 @@
         <el-radio :label="3">腾讯云</el-radio>
         <el-radio :label="4">其它</el-radio>
       </el-radio-group>
+      <div class="help-block" style="color: #999; font-size: 12px">需要确保与实际的对应</div>
     </el-form-item>
     <el-form-item label="AccessKey：" prop="access_key">
       <el-input v-if="showAccessKey || form.id === undefined" v-model="form.access_key" show-password autocomplete="off" type="password" clearable />

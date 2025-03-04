@@ -1,7 +1,8 @@
 <template>
-  <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" label-position="right" label-width="120px" style="width: 95%">
+  <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" size="small" label-position="right" label-width="120px" style="width: 95%">
     <el-form-item label="域名：" prop="name">
       <el-input v-model="form.name" autocomplete="off" clearable />
+      <div class="help-block" style="color: #999; font-size: 12px">建议从域名服务端同步域名，如果不支持同步则手动新增</div>
     </el-form-item>
     <el-form-item label="注册时间：" prop="registration_at">
       <el-date-picker
