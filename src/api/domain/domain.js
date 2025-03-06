@@ -68,3 +68,21 @@ export function getDomainList(params) {
     params
   })
 }
+
+// 同步域名
+export function syncDomain(params) {
+  return request({
+    url: '/api/v1/domain/sync',
+    method: 'post',
+    params
+  })
+}
+
+// 获取域名DNS解析列表
+export function getDomainDnsList(params) {
+  return request({
+    url: '/api/v1/domain/dns',
+    method: 'get',
+    params
+  })
+}

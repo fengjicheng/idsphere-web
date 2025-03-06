@@ -45,7 +45,7 @@
             :table-data="tableData"
             @edit="handleEditDomain"
             @delete="handleDelete"
-            @active="handleDomainSubmit"
+            @dns="handleDomainDns"
           />
 
           <!-- 分页 -->
@@ -115,6 +115,34 @@
       <!-- 表单组件 -->
       <rule-describe />
     </el-dialog>
+
+    <!-- 域名解析设置 -->
+    <el-dialog
+      title="解析设置"
+      :visible.sync="domainDnsDialog"
+      :show-close="true"
+      width="1200px"
+      :close-on-click-modal="true"
+    >
+      <!-- 表格组件 -->
+      <dns-list-table
+        v-loading="loading"
+        :form="dnsQueryParams"
+        :table-data="dnsTableData"
+        @search="getDns()"
+      />
+      <!-- 分页 -->
+      <el-pagination
+        background
+        :current-page="dnsQueryParams.page"
+        :page-sizes="[10, 15, 20, 30, 40]"
+        :page-size="dnsQueryParams.limit"
+        :total="dnsTotal"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="handleDnsPageSizeChange"
+        @current-change="handleDnsPageChange"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -122,8 +150,10 @@
 import { Message } from 'element-ui'
 import { getDomainServiceProviderList, addDomainServiceProvider, deleteDomainServiceProvider, changeDomainServiceProvider } from '@/api/domain/domain'
 import { getDomainList, addDomain, changeDomain, deleteDomain } from '@/api/domain/domain'
+import { syncDomain, getDomainDnsList } from '@/api/domain/domain'
 import RuleDescribe from './rule'
 import DomainListTable from './table'
+import DnsListTable from './dns'
 import DomainAddForm from './form'
 import DomainProviderAddForm from './provider'
 
@@ -132,6 +162,7 @@ export default {
     DomainListTable,
     DomainAddForm,
     RuleDescribe,
+    DnsListTable,
     DomainProviderAddForm
   },
   data() {
@@ -158,10 +189,19 @@ export default {
         name: '',
         provider_id: '',
         page: 1,
-        limit: 15
+        limit: 10
+      },
+      dnsTableData: [],
+      dnsTotal: 0,
+      dnsQueryParams: {
+        keyWord: '',
+        id: '',
+        page: 1,
+        limit: 10
       },
       domainAddDialog: false,
       domainProviderAddDialog: false,
+      domainDnsDialog: false,
       domainSyncRuleDialog: false
     }
   },
@@ -174,6 +214,17 @@ export default {
       this.queryParams.page = 1
       this.loading = true
       this.getDomains()
+    },
+
+    /* 获取域名DNS解析列表 */
+    handleDomainDns(data) {
+      // 打开Dialog
+      this.domainDnsDialog = true
+      // 显示加载
+      this.loading = true
+      // 赋值
+      this.dnsQueryParams.id = data.id
+      this.getDns()
     },
 
     /* 获取域名服务商和域名 */
@@ -193,6 +244,16 @@ export default {
       })
     },
 
+    // 获取域名DNS解析列表
+    getDns() {
+      // 获取域名DNS解析列表
+      getDomainDnsList(this.dnsQueryParams).then((res) => {
+        this.dnsTableData = res.data.items
+        this.dnsTotal = res.data.total
+        this.loading = false
+      })
+    },
+
     /* page size变化 */
     handlePageSizeChange(newSize) {
       this.queryParams.limit = newSize
@@ -203,6 +264,18 @@ export default {
     handlePageChange(newPage) {
       this.queryParams.page = newPage
       this.getList()
+    },
+
+    /* DNS 解析列表 page size变化 */
+    handleDnsPageSizeChange(newSize) {
+      this.dnsQueryParams.limit = newSize
+      this.getDns()
+    },
+
+    /* DNS 解析列表 page number的变化 */
+    handleDnsPageChange(newPage) {
+      this.dnsQueryParams.page = newPage
+      this.getDns()
     },
 
     /* 点击节点树时 */
@@ -257,7 +330,7 @@ export default {
     },
 
     /* 同步域名服务商 */
-    sync() {
+    sync(data) {
       this.$confirm('点击确认将从服务商处同步域名信息到本地，点击了解详细<a href="javascript:;" id="handleRuleDetails" style="color: #66b1ff;">同步规则</a>。', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -269,22 +342,22 @@ export default {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             instance.confirmButtonText = '同步中...'
-            // userSync().then((res) => {
-            //   if (res.code === 0) {
-            //     Message({
-            //       message: res.msg,
-            //       type: 'success',
-            //       duration: 1000
-            //     })
-            //     instance.confirmButtonLoading = false
-            //     done()
-            //     // 获取最新数据
-            //     this.getList()
-            //   }
-            // }).finally(() => {
-            //   instance.confirmButtonLoading = false
-            //   instance.confirmButtonText = '确定'
-            // })
+            syncDomain({ provider_id: data.id }).then((res) => {
+              if (res.code === 0) {
+                Message({
+                  message: res.msg,
+                  type: 'success',
+                  duration: 1000
+                })
+                instance.confirmButtonLoading = false
+                done()
+                // 获取最新数据
+                this.getDomains()
+              }
+            }).finally(() => {
+              instance.confirmButtonLoading = false
+              instance.confirmButtonText = '确定'
+            })
           } else {
             done()
           }
