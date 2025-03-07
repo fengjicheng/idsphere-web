@@ -129,10 +129,12 @@
         v-loading="loading"
         :form="dnsQueryParams"
         :table-data="dnsTableData"
+        :loading="loading2"
         @search="getDns()"
         @edit="handleEditDns"
         @add="handleAddDns"
         @delete="handleDeleteDns"
+        @pause="handlePauseDns"
       />
       <!-- 分页 -->
       <el-pagination
@@ -167,7 +169,7 @@
 import { Message } from 'element-ui'
 import { getDomainServiceProviderList, addDomainServiceProvider, deleteDomainServiceProvider, changeDomainServiceProvider } from '@/api/domain/domain'
 import { getDomainList, addDomain, changeDomain, deleteDomain } from '@/api/domain/domain'
-import { syncDomain, getDomainDnsList, addDns, changeDns, deleteDns } from '@/api/domain/domain'
+import { syncDomain, getDomainDnsList, addDns, changeDns, deleteDns, changeDnsStatus } from '@/api/domain/domain'
 import RuleDescribe from './rule'
 import DomainListTable from './table'
 import DnsListTable from './dns'
@@ -350,6 +352,20 @@ export default {
       this.domainProviderAddDialog = true
       // 更改Dialog标题
       this.formTitle = '新增域名服务商'
+    },
+
+    /* 修改DNS解析状态 */
+    handlePauseDns(data) {
+      this.loading2 = true
+      data['domain_id'] = this.dnsQueryParams.id
+      changeDnsStatus(data).then((res) => {
+        Message({
+          message: res.msg,
+          type: 'success',
+          duration: 1000
+        })
+        this.loading2 = false
+      })
     },
 
     /* 新增DNS解析 */

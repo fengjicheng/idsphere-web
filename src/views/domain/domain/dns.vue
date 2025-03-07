@@ -30,7 +30,7 @@
         <template slot-scope="scope">
           <el-button size="mini" type="text" @click="handleEdit(scope.row)">编辑</el-button>
           <el-button size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button size="mini" type="text" @click="handdlePause(scope.row)">暂停</el-button>
+          <el-button :loading="loading" size="mini" type="text" @click="handdlePause(scope.row)">{{ scope.row.status === 'ENABLE' ? '暂停' : '启用' }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -54,6 +54,9 @@ export default {
       default: function() {
         return []
       }
+    },
+    loading: {
+      type: Boolean
     }
   },
   methods: {
@@ -84,6 +87,11 @@ export default {
 
     /* 暂停按钮 */
     handdlePause(value) {
+      if (value.status === 'ENABLE') {
+        value.status = 'DISABLE'
+      } else {
+        value.status = 'ENABLE'
+      }
       this.$emit('pause', value)
     },
 

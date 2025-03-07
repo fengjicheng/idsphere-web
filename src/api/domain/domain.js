@@ -113,3 +113,12 @@ export function deleteDns(data) {
     data
   })
 }
+
+// 修改DNS状态
+export function changeDnsStatus(data) {
+  return request({
+    url: '/api/v1/domain/dns_status',
+    method: 'put',
+    data
+  })
+}
