@@ -72,6 +72,11 @@ export default {
       this.$emit('search')
     },
 
+    /* 新增按钮 */
+    handleAddDns() {
+      this.$emit('add')
+    },
+
     /* 编辑按钮 */
     handleEdit(value) {
       this.$emit('edit', value)

@@ -118,7 +118,7 @@
 
     <!-- 域名解析设置 -->
     <el-dialog
-      title="解析设置"
+      title="域名解析列表"
       :visible.sync="domainDnsDialog"
       :show-close="true"
       width="1200px"
@@ -130,6 +130,9 @@
         :form="dnsQueryParams"
         :table-data="dnsTableData"
         @search="getDns()"
+        @edit="handleEditDns"
+        @add="handleAddDns"
+        @delete="handleDeleteDns"
       />
       <!-- 分页 -->
       <el-pagination
@@ -143,6 +146,20 @@
         @current-change="handleDnsPageChange"
       />
     </el-dialog>
+
+    <!-- DNS解析修改 -->
+    <el-dialog
+      v-if="dnsAddDialog"
+      :title="formTitle"
+      :visible.sync="dnsAddDialog"
+      :show-close="false"
+      width="700px"
+      :close-on-click-modal="false"
+      @closed="handleClose"
+    >
+      <!-- 表单组件 -->
+      <dns-add-form :loading="loading2" :form="currentValue" :domain-name="currentDomainName" @close="handleClose" @submit="handleDNsSubmit" />
+    </el-dialog>
   </div>
 </template>
 
@@ -150,11 +167,12 @@
 import { Message } from 'element-ui'
 import { getDomainServiceProviderList, addDomainServiceProvider, deleteDomainServiceProvider, changeDomainServiceProvider } from '@/api/domain/domain'
 import { getDomainList, addDomain, changeDomain, deleteDomain } from '@/api/domain/domain'
-import { syncDomain, getDomainDnsList } from '@/api/domain/domain'
+import { syncDomain, getDomainDnsList, addDns, changeDns, deleteDns } from '@/api/domain/domain'
 import RuleDescribe from './rule'
 import DomainListTable from './table'
 import DnsListTable from './dns'
 import DomainAddForm from './form'
+import DnsAddForm from './form-dns'
 import DomainProviderAddForm from './provider'
 
 export default {
@@ -163,6 +181,7 @@ export default {
     DomainAddForm,
     RuleDescribe,
     DnsListTable,
+    DnsAddForm,
     DomainProviderAddForm
   },
   data() {
@@ -181,10 +200,12 @@ export default {
         label: 'name'
       },
       loading: false,
+      loading2: false,
       tableData: [],
       total: 0,
       formTitle: '',
       currentValue: undefined,
+      currentDomainName: '',
       queryParams: {
         name: '',
         provider_id: '',
@@ -202,7 +223,8 @@ export default {
       domainAddDialog: false,
       domainProviderAddDialog: false,
       domainDnsDialog: false,
-      domainSyncRuleDialog: false
+      domainSyncRuleDialog: false,
+      dnsAddDialog: false
     }
   },
   created() {
@@ -220,8 +242,8 @@ export default {
     handleDomainDns(data) {
       // 打开Dialog
       this.domainDnsDialog = true
-      // 显示加载
-      this.loading = true
+      // 将当域名赋值给currentDomainName
+      this.currentDomainName = data.name
       // 赋值
       this.dnsQueryParams.id = data.id
       this.getDns()
@@ -246,6 +268,7 @@ export default {
 
     // 获取域名DNS解析列表
     getDns() {
+      this.loading = true
       // 获取域名DNS解析列表
       getDomainDnsList(this.dnsQueryParams).then((res) => {
         this.dnsTableData = res.data.items
@@ -329,6 +352,24 @@ export default {
       this.formTitle = '新增域名服务商'
     },
 
+    /* 新增DNS解析 */
+    handleAddDns(data) {
+      // 打开Dialog
+      this.dnsAddDialog = true
+      // 更改Dialog标题
+      this.formTitle = '新增DNS解析'
+    },
+
+    /* 修改DNS解析 */
+    handleEditDns(data) {
+      // 打开Dialog
+      this.dnsAddDialog = true
+      // 更改Dialog标题
+      this.formTitle = 'DNS解析修改'
+      // 将当节点数据赋值给currentValue
+      this.currentValue = JSON.parse(JSON.stringify(data))
+    },
+
     /* 同步域名服务商 */
     sync(data) {
       this.$confirm('点击确认将从服务商处同步域名信息到本地，点击了解详细<a href="javascript:;" id="handleRuleDetails" style="color: #66b1ff;">同步规则</a>。', '提示', {
@@ -386,6 +427,42 @@ export default {
       this.formTitle = '修改域名服务商'
       // 将当节点数据赋值给currentValue
       this.currentValue = JSON.parse(JSON.stringify(data))
+    },
+
+    /* 删除域名DNS解析 */
+    handleDeleteDns(data) {
+      data['domain_id'] = this.dnsQueryParams.id
+      this.$confirm('点击确认当前域名的DNS解析记录将从域名服务商处永久删除。', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        showClose: false,
+        closeOnClickModal: false,
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true
+            instance.confirmButtonText = '删除中...'
+            deleteDns(data).then((res) => {
+              if (res.code === 0) {
+                Message({
+                  message: res.msg,
+                  type: 'success',
+                  duration: 1000
+                })
+                instance.confirmButtonLoading = false
+                done()
+                // 获取最新数据
+                this.getDns()
+              }
+            }).finally(() => {
+              instance.confirmButtonLoading = false
+              instance.confirmButtonText = '确定'
+            })
+          } else {
+            done()
+          }
+        }
+      }).then(() => {}).catch(() => {})
     },
 
     /* 删除域名服务商 */
@@ -446,6 +523,7 @@ export default {
       // 关闭所有Dialog
       this.domainAddDialog = false
       this.domainProviderAddDialog = false
+      this.dnsAddDialog = false
       // 清空表单及空梭框数据
       this.currentValue = undefined
       // 关闭loading状态
@@ -561,6 +639,46 @@ export default {
           }
         }, () => {
           this.loading = false
+        })
+      }
+    },
+
+    /* DNS解析记录新增和修改 */
+    handleDNsSubmit(formData) {
+      this.loading2 = true
+      formData['domain_id'] = this.dnsQueryParams.id
+      // 使用id进行判断，有id表示修改，没有表示新增
+      if (formData.record_id) {
+        // 更新域名DNS解析
+        changeDns(formData).then((res) => {
+          if (res.code === 0) {
+            Message({
+              message: res.msg,
+              type: 'success',
+              duration: 1000
+            })
+            this.loading2 = false
+            this.dnsAddDialog = false
+            this.getDns()
+          }
+        }, () => {
+          this.loading2 = false
+        })
+      } else {
+        // 添加域名DNS解析
+        addDns(formData).then((res) => {
+          if (res.code === 0) {
+            Message({
+              message: res.msg,
+              type: 'success',
+              duration: 1000
+            })
+            this.loading2 = false
+            this.dnsAddDialog = false
+            this.getDns()
+          }
+        }, () => {
+          this.loading2 = false
         })
       }
     }

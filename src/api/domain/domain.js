@@ -86,3 +86,30 @@ export function getDomainDnsList(params) {
     params
   })
 }
+
+// 新增DNS解析
+export function addDns(data) {
+  return request({
+    url: '/api/v1/domain/dns',
+    method: 'post',
+    data
+  })
+}
+
+// 修改DNS解析
+export function changeDns(data) {
+  return request({
+    url: '/api/v1/domain/dns',
+    method: 'put',
+    data
+  })
+}
+
+// 删除域名DNS解析
+export function deleteDns(data) {
+  return request({
+    url: '/api/v1/domain/dns',
+    method: 'delete',
+    data
+  })
+}

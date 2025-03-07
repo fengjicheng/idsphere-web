@@ -1,0 +1,114 @@
+<template>
+  <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" size="small" label-position="right" label-width="120px" style="width: 95%">
+    <el-form-item label="记录类型：" prop="type">
+      <el-select v-model="form.type" clearable style="width: 100%">
+        <el-option v-for="item in rr_type" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
+      <div class="help-block" style="color: #999; font-size: 12px">仅支持创建类型为A、CNAME、TXT和MX的记录，其它记录登录至服务商处创建</div>
+    </el-form-item>
+    <el-form-item label="主机记录：" prop="rr">
+      <el-input v-model="form.rr" autocomplete="off" clearable>
+        <template slot="append">.{{ domainName }}</template>
+      </el-input>
+    </el-form-item>
+    <el-form-item label="记录值：" prop="value">
+      <el-input v-model="form.value" autocomplete="off" clearable />
+    </el-form-item>
+    <el-form-item v-if="form.type === 'MX'" label="优先级：">
+      <el-input v-model.number="form.priority" autocomplete="off" clearable />
+      <div class="help-block" style="color: #999; font-size: 12px">邮件系统会先尝试向MX优先级数值最低（优先级最高）的邮件系统服务器地址通信</div>
+    </el-form-item>
+    <el-form-item label="TTL：" prop="ttl">
+      <el-input v-model.number="form.ttl" autocomplete="off" clearable>
+        <template slot="append">单位（秒）</template>
+      </el-input>
+    </el-form-item>
+    <el-form-item>
+      <div>
+        <el-button size="mini" @click="cancel">取 消</el-button>
+        <el-button type="primary" size="mini" :loading="loading" @click="handleSubmit">确 定</el-button>
+      </div>
+    </el-form-item>
+  </el-form>
+</template>
+
+<script>
+export default {
+  name: 'DnsAddForm',
+  props: {
+    form: {
+      type: Object,
+      default() {
+        return {
+          value: '',
+          ttl: 600,
+          type: 'A',
+          rr: '',
+          priority: 10
+        }
+      }
+    },
+    domainName: {
+      type: String,
+      default: ''
+    },
+    provider: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    loading: {
+      type: Boolean
+    }
+  },
+  data() {
+    return {
+      rr_type: [{
+        value: 'A',
+        label: 'A 记录'
+      }, {
+        value: 'CNAME',
+        label: 'CNAME 记录'
+      }, {
+        value: 'TXT',
+        label: 'TXT 记录'
+      }, {
+        value: 'MX',
+        label: 'MX 记录'
+      }],
+      rules: {
+        type: [
+          { required: true, message: '请选择记录类型', trigger: 'change' }
+        ],
+        rr: [
+          { required: true, message: '请输入主机记录', trigger: 'change' }
+        ],
+        value: [
+          { required: true, message: '请输入主机记录指向值', trigger: 'change' }
+        ],
+        ttl: [
+          { required: true, message: '请输入主机记录缓存时间', trigger: 'change' }
+        ]
+      }
+    }
+  },
+  methods: {
+
+    /* 提交表单 */
+    handleSubmit() {
+      this.$refs.form.validate(valid => {
+        if (!valid) {
+          return
+        }
+        this.$emit('submit', this.form)
+      })
+    },
+
+    /* 关闭表单 */
+    cancel() {
+      this.$emit('close')
+    }
+  }
+}
+</script>
