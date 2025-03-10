@@ -310,6 +310,9 @@ export default {
       } else {
         this.queryParams.provider_id = data.id
       }
+      this.queryParams.page = 1
+      this.queryParams.limit = 10
+      this.queryParams.name = ''
       this.getDomains()
     },
 

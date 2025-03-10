@@ -14,14 +14,22 @@
     <el-form-item label="记录值：" prop="value">
       <el-input v-model="form.value" autocomplete="off" clearable />
     </el-form-item>
-    <el-form-item v-if="form.type === 'MX'" label="优先级：">
-      <el-input v-model.number="form.priority" autocomplete="off" clearable />
-      <div class="help-block" style="color: #999; font-size: 12px">邮件系统会先尝试向MX优先级数值最低（优先级最高）的邮件系统服务器地址通信</div>
+    <el-form-item label="优先级：" prop="priority">
+      <el-input v-model.number="form.priority" :disabled="form.type !== 'MX'" autocomplete="off" clearable />
+      <div class="help-block" style="color: #999; font-size: 12px">当记录类型为MX时必填，数值越小优先级越高，0表示不使用权重</div>
     </el-form-item>
     <el-form-item label="TTL：" prop="ttl">
       <el-input v-model.number="form.ttl" autocomplete="off" clearable>
         <template slot="append">单位（秒）</template>
       </el-input>
+    </el-form-item>
+    <el-form-item label="权重：">
+      <el-input v-model.number="form.weight" :disabled="form.type === 'MX'" autocomplete="off" clearable />
+      <div class="help-block" style="color: #999; font-size: 12px">仅支持腾讯云本地修改，范围0-100，数值越大权重越高</div>
+    </el-form-item>
+    <el-form-item label="备注：" prop="remark">
+      <el-input v-model="form.remark" autocomplete="off" clearable />
+      <div class="help-block" style="color: #999; font-size: 12px">仅支持腾讯云本地修改</div>
     </el-form-item>
     <el-form-item>
       <div>
@@ -44,7 +52,8 @@ export default {
           ttl: 600,
           type: 'A',
           rr: '',
-          priority: 10
+          priority: null,
+          weight: null
         }
       }
     },
@@ -89,8 +98,21 @@ export default {
         ],
         ttl: [
           { required: true, message: '请输入主机记录缓存时间', trigger: 'change' }
+        ],
+        priority: [
+          { required: false, message: '请输入记录优先级', trigger: 'change' }
         ]
       }
+    }
+  },
+  watch: {
+    'form.type'(val) {
+      if (val === 'MX') {
+        this.rules.priority[0].required = true
+      } else {
+        this.rules.priority[0].required = false
+      }
+      this.$refs.form.clearValidate()
     }
   },
   methods: {

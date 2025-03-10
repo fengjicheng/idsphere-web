@@ -17,13 +17,18 @@
       <el-table-column type="selection" width="40" />
       <el-table-column show-overflow-tooltip prop="rr" label="主机记录" min-width="2%" />
       <el-table-column prop="type" label="记录类型" min-width="2%" />
-      <el-table-column show-overflow-tooltip prop="value" label="记录值" min-width="3%" />
+      <el-table-column show-overflow-tooltip prop="value" label="记录值 | 优先级" min-width="3%">
+        <template slot-scope="scope">
+          {{ scope.row.value }}<span v-if="scope.row.type === 'MX'"> | {{ scope.row.priority }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="ttl" label="TTL（秒）" min-width="2%" />
       <el-table-column prop="status" label="状态" min-width="2">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status === 'ENABLE' ? 'success' : 'danger'" size="mini">{{ scope.row.status === 'ENABLE' ? '启用' : '暂停' }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="weight" label="权重" min-width="1%" />
       <el-table-column :formatter="dateFormat" prop="create_at" label="创建时间" min-width="3%" />
       <el-table-column show-overflow-tooltip prop="remark" label="备注" min-width="3%" />
       <el-table-column label="操作" min-width="3%" align="center">

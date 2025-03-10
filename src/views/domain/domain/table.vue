@@ -16,7 +16,7 @@
               <el-button class="el-button-text" size="mini" type="text" @click="handleDNS(scope.row)">域名解析配置</el-button>
             </el-dropdown-item>
             <el-dropdown-item>
-              <el-button class="el-button-text" size="mini" type="text" @click="handleUpload(scope.row)">上传本地证书</el-button>
+              <el-button class="el-button-text" size="mini" type="text" @click="handleUpload(scope.row)">本地上传证书</el-button>
             </el-dropdown-item>
             <el-dropdown-item>
               <el-button class="el-button-text" size="mini" type="text" @click="handleCreate(scope.row)">创建免费证书</el-button>
