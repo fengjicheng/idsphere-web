@@ -17,9 +17,17 @@
       <el-table-column type="selection" width="40" />
       <el-table-column show-overflow-tooltip prop="rr" label="主机记录" min-width="2%" />
       <el-table-column prop="type" label="记录类型" min-width="2%" />
-      <el-table-column show-overflow-tooltip prop="value" label="记录值 | 优先级" min-width="3%">
+      <el-table-column show-overflow-tooltip prop="value" label="记录值 | MX记录优先级" min-width="3%">
         <template slot-scope="scope">
-          {{ scope.row.value }}<span v-if="scope.row.type === 'MX'"> | {{ scope.row.priority }}</span>
+          <div v-for="(item, index) in scope.row.value.split(',')" :key="index">
+            <template v-if="scope.row.type === 'MX' && item.includes(' ')">
+              {{ item.split(' ')[1] }} | {{ item.split(' ')[0] }}
+            </template>
+            <template v-else>
+              {{ item }}
+            </template>
+          </div>
+          <span v-if="scope.row.type === 'MX' && scope.row.priority">| {{ scope.row.priority }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="ttl" label="TTL（秒）" min-width="2%" />
@@ -35,7 +43,7 @@
         <template slot-scope="scope">
           <el-button size="mini" type="text" @click="handleEdit(scope.row)">编辑</el-button>
           <el-button size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button :loading="loading" size="mini" type="text" @click="handdlePause(scope.row)">{{ scope.row.status === 'ENABLE' ? '暂停' : '启用' }}</el-button>
+          <el-button :loading="scope.row.loading" size="mini" type="text" @click="handdlePause(scope.row)">{{ scope.row.status === 'ENABLE' ? '暂停' : '启用' }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -59,9 +67,14 @@ export default {
       default: function() {
         return []
       }
-    },
-    loading: {
-      type: Boolean
+    }
+    // loading: {
+    //   type: Boolean
+    // }
+  },
+  data() {
+    return {
+      loading: false
     }
   },
   methods: {
@@ -92,12 +105,11 @@ export default {
 
     /* 暂停按钮 */
     handdlePause(value) {
-      if (value.status === 'ENABLE') {
-        value.status = 'DISABLE'
-      } else {
-        value.status = 'ENABLE'
-      }
-      this.$emit('pause', value)
+      value.status = value.status === 'ENABLE' ? 'DISABLE' : 'ENABLE'
+      this.$set(value, 'loading', true)
+      this.$emit('pause', value, (success) => {
+        this.$set(value, 'loading', false)
+      })
     },
 
     /* 删除按钮 */

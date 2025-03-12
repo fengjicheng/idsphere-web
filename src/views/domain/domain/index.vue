@@ -129,8 +129,7 @@
         v-loading="loading"
         :form="dnsQueryParams"
         :table-data="dnsTableData"
-        :loading="loading2"
-        @search="getDns()"
+        @search="handleDnsSearch"
         @edit="handleEditDns"
         @add="handleAddDns"
         @delete="handleDeleteDns"
@@ -240,6 +239,12 @@ export default {
       this.getDomains()
     },
 
+    /* 查找DNS记录 */
+    handleDnsSearch() {
+      this.dnsQueryParams.page = 1
+      this.getDns()
+    },
+
     /* 获取域名DNS解析列表 */
     handleDomainDns(data) {
       // 打开Dialog
@@ -265,6 +270,8 @@ export default {
         this.tableData = res.data.items
         this.total = res.data.total
         this.loading = false
+      }).finally(() => {
+        this.loading = false
       })
     },
 
@@ -275,6 +282,8 @@ export default {
       getDomainDnsList(this.dnsQueryParams).then((res) => {
         this.dnsTableData = res.data.items
         this.dnsTotal = res.data.total
+        this.loading = false
+      }).finally(() => {
         this.loading = false
       })
     },
@@ -358,8 +367,7 @@ export default {
     },
 
     /* 修改DNS解析状态 */
-    handlePauseDns(data) {
-      this.loading2 = true
+    handlePauseDns(data, callback) {
       data['domain_id'] = this.dnsQueryParams.id
       changeDnsStatus(data).then((res) => {
         Message({
@@ -367,7 +375,11 @@ export default {
           type: 'success',
           duration: 1000
         })
-        this.loading2 = false
+        callback(true)
+      }).catch(() => {
+        callback(false)
+      }).finally(() => {
+        callback(false)
       })
     },
 

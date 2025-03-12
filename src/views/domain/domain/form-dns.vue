@@ -13,10 +13,11 @@
     </el-form-item>
     <el-form-item label="记录值：" prop="value">
       <el-input v-model="form.value" autocomplete="off" clearable />
+      <div class="help-block" style="color: #999; font-size: 12px">华为云：如果有多个值请使用英文逗号分割，MX和TXT记录书写格式参考官方</div>
     </el-form-item>
     <el-form-item label="优先级：" prop="priority">
       <el-input v-model.number="form.priority" :disabled="form.type !== 'MX'" autocomplete="off" clearable />
-      <div class="help-block" style="color: #999; font-size: 12px">当记录类型为MX时必填，数值越小优先级越高，0表示不使用权重</div>
+      <div class="help-block" style="color: #999; font-size: 12px">当记录类型为MX时必填（除华为云），数值越小优先级越高，0表示不使用权重</div>
     </el-form-item>
     <el-form-item label="TTL：" prop="ttl">
       <el-input v-model.number="form.ttl" autocomplete="off" clearable>
@@ -25,11 +26,11 @@
     </el-form-item>
     <el-form-item label="权重：">
       <el-input v-model.number="form.weight" :disabled="form.type === 'MX'" autocomplete="off" clearable />
-      <div class="help-block" style="color: #999; font-size: 12px">仅支持腾讯云本地修改，范围0-100，数值越大权重越高</div>
+      <div class="help-block" style="color: #999; font-size: 12px">范围0-100，数值越大权重越高，仅腾讯云支持本地修改</div>
     </el-form-item>
     <el-form-item label="备注：" prop="remark">
       <el-input v-model="form.remark" autocomplete="off" clearable />
-      <div class="help-block" style="color: #999; font-size: 12px">仅支持腾讯云本地修改</div>
+      <div class="help-block" style="color: #999; font-size: 12px">仅腾讯云支持本地修改</div>
     </el-form-item>
     <el-form-item>
       <div>
