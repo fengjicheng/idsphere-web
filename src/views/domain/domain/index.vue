@@ -118,14 +118,17 @@
 
     <!-- 域名解析设置 -->
     <el-dialog
+      v-if="domainDnsDialog"
       title="域名解析列表"
       :visible.sync="domainDnsDialog"
       :show-close="true"
       width="1200px"
       :close-on-click-modal="true"
+      @closed="handleClose"
     >
       <!-- 表格组件 -->
       <dns-list-table
+        ref="form"
         v-loading="loading"
         :form="dnsQueryParams"
         :table-data="dnsTableData"
@@ -555,8 +558,10 @@ export default {
       this.domainAddDialog = false
       this.domainProviderAddDialog = false
       this.dnsAddDialog = false
+      this.domainDnsDialog = false
       // 清空表单及空梭框数据
       this.currentValue = undefined
+      this.dnsTableData = []
       // 关闭loading状态
       this.loading = false
       // 清空校验规则

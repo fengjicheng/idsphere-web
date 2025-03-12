@@ -26,7 +26,7 @@
     </el-form-item>
     <el-form-item label="权重：">
       <el-input v-model.number="form.weight" :disabled="form.type === 'MX'" autocomplete="off" clearable />
-      <div class="help-block" style="color: #999; font-size: 12px">范围0-100，数值越大权重越高，仅腾讯云支持本地修改</div>
+      <div class="help-block" style="color: #999; font-size: 12px">负载均衡权重，范围0-100，数值越大权重越高，仅华为云和腾讯云支持本地修改</div>
     </el-form-item>
     <el-form-item label="备注：" prop="remark">
       <el-input v-model="form.remark" autocomplete="off" clearable />
@@ -123,6 +123,11 @@ export default {
       this.$refs.form.validate(valid => {
         if (!valid) {
           return
+        }
+
+        // 如果权重为空，则传 null
+        if (this.form.weight === '' || this.form.weight === undefined || this.form.weight === null) {
+          this.form.weight = null
         }
         this.$emit('submit', this.form)
       })

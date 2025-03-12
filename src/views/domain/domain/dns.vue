@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :inline="true">
+    <el-form ref="form" :inline="true">
       <el-form-item label="关键字：">
         <el-input v-model="form.keyWord" placeholder="输入关键字" size="small" prefix-icon="el-icon-search" clearable />
       </el-form-item>
@@ -68,9 +68,6 @@ export default {
         return []
       }
     }
-    // loading: {
-    //   type: Boolean
-    // }
   },
   data() {
     return {
