@@ -82,7 +82,8 @@ export default {
       // 请务随意更改value，该值用于后端任务执行逻辑判断
       methods: [
         { value: 'password_expire_notify', name: '用户密码过期通知' },
-        { value: 'user_sync', name: '用户同步' }
+        { value: 'user_sync', name: '用户同步' },
+        { value: 'domain_sync', name: '域名同步' }
       ],
       rules: {
         name: [
