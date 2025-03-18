@@ -9,20 +9,7 @@
       <template slot-scope="scope">
         <el-button size="mini" type="text" @click="handleEdit(scope.row)">编辑</el-button>
         <el-button size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
-        <el-dropdown style="margin-left: 10px" trigger="click">
-          <el-button size="mini" type="text">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>
-              <el-button class="el-button-text" size="mini" type="text" @click="handleDNS(scope.row)">域名解析配置</el-button>
-            </el-dropdown-item>
-            <el-dropdown-item>
-              <el-button class="el-button-text" size="mini" type="text" @click="handleUpload(scope.row)">本地上传证书</el-button>
-            </el-dropdown-item>
-            <el-dropdown-item>
-              <el-button class="el-button-text" size="mini" type="text" @click="handleCreate(scope.row)">创建免费证书</el-button>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <el-button size="mini" type="text" @click="handleDNS(scope.row)">DNS解析</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -57,19 +44,9 @@ export default {
       this.$emit('edit', value)
     },
 
-    /* 上传本地证书 */
-    handleUpload(value) {
-      this.$emit('upload', value)
-    },
-
     /* 域名解析修改 */
     handleDNS(value) {
       this.$emit('dns', value)
-    },
-
-    /* 创建免费证书 */
-    handleCreate(value) {
-      this.$emit('create', value)
     },
 
     /* 删除按钮 */
