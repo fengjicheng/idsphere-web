@@ -8,7 +8,7 @@
       <template slot-scope="scope">
         <el-tag v-if="scope.row.type === 1" size="mini" type="info" effect="dark">DV 证书</el-tag>
         <el-tag v-if="scope.row.type === 2" size="mini" effect="dark">OV 证书 </el-tag>
-        <el-tag v-if="scope.row.type === 3" size="mini" effect="dark">EV 证书 </el-tag>
+        <el-tag v-if="scope.row.type === 3" size="mini" type="success" effect="dark">EV 证书 </el-tag>
       </template>
     </el-table-column>
     <el-table-column prop="server_type" label="服务器类型" min-width="2%">
@@ -19,6 +19,7 @@
         <el-tag v-if="scope.row.server_type === 4" size="mini" effect="plain">Tomcat</el-tag>
       </template>
     </el-table-column>
+    <el-table-column prop="status" label="状态" min-width="2%" />
     <el-table-column label="操作" min-width="5%" align="center">
       <template slot-scope="scope">
         <el-button :loading="scope.row.loading" size="mini" type="text" @click="handleDownload(scope.row)">下载</el-button>

@@ -15,10 +15,10 @@
     <!-- 表格头 -->
     <el-row :gutter="10">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-upload2" size="mini" @click="upload">本地上传</el-button>
+        <el-button type="primary" plain icon="el-icon-upload2" size="mini" @click="handleUpload">本地上传</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="create">免费申请</el-button>
+        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleRequest">免费申请</el-button>
       </el-col>
     </el-row>
 
@@ -58,27 +58,26 @@
         :form="currentValue"
         :loading="loading"
         @close="handleClose"
-        @submit="handleUpload"
+        @submit="submitUpload"
       />
     </el-dialog>
 
-    <!-- 创建证书 -->
+    <!-- 申请证书 -->
     <el-dialog
-      v-if="createDialog"
+      v-if="requestDialog"
       :title="formTitle"
-      :visible.sync="createDialog"
+      :visible.sync="requestDialog"
       :show-close="false"
-      width="800px"
+      width="500px"
       :close-on-click-modal="false"
       @closed="handleClose"
     >
       <!-- 表单组件 -->
-      <certificate-create-form
+      <certificate-request-form
         ref="form"
         :form="currentValue"
-        :loading="loading"
-        @close="handleClose"
-        @submit="handleCreate"
+        @close="requestDialog = false"
+        @submit="submitRequest"
       />
     </el-dialog>
   </div>
@@ -86,16 +85,16 @@
 
 <script>
 import { Message } from 'element-ui'
-import { uploadCertificate, createCertificate, deleteCertificate, getCertificateList, downloadCertificate } from '@/api/domain/certificate'
+import { uploadCertificate, deleteCertificate, getCertificateList, downloadCertificate, requestCertificate } from '@/api/domain/certificate'
 import CertificateListTable from './table'
 import CertificateUploadForm from './upload'
-import CertificateCreateForm from './create'
+import CertificateRequestForm from './create'
 
 export default {
   components: {
     CertificateListTable,
     CertificateUploadForm,
-    CertificateCreateForm
+    CertificateRequestForm
   },
   data() {
     return {
@@ -110,7 +109,7 @@ export default {
         limit: 15
       },
       uploadDialog: false,
-      createDialog: false
+      requestDialog: false
     }
   },
   created() {
@@ -147,17 +146,17 @@ export default {
     },
 
     /* 上传证书 */
-    upload() {
+    handleUpload() {
       // 显示弹框
       this.uploadDialog = true
       // 更改弹框标题
       this.formTitle = '证书上传'
     },
 
-    /* 创建证书 */
-    create() {
+    /* 申请证书 */
+    handleRequest() {
       // 显示弹框
-      this.createDialog = true
+      this.requestDialog = true
       // 更改弹框标题
       this.formTitle = '证书申请'
     },
@@ -241,7 +240,7 @@ export default {
     },
 
     /* 证书上传 */
-    handleUpload(formData) {
+    submitUpload(formData) {
       this.loading = true
       uploadCertificate(formData).then((res) => {
         if (res.code === 0) {
@@ -259,9 +258,9 @@ export default {
     },
 
     /* 证书申请 */
-    handleCreate(formData) {
+    submitRequest(formData) {
       this.loading = true
-      createCertificate(formData).then((res) => {
+      requestCertificate(formData).then((res) => {
         if (res.code === 0) {
           Message({
             message: res.msg,
@@ -280,7 +279,7 @@ export default {
     handleClose() {
       // 关闭所有Dialog
       this.uploadDialog = false
-      this.createDialog = false
+      this.requestDialog = false
       // 清空表单及空梭框数据
       this.currentValue = undefined
       // 清空校验规则

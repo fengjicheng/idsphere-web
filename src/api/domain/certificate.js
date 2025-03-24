@@ -10,9 +10,9 @@ export function uploadCertificate(data) {
 }
 
 // 申请证书
-export function createCertificate(data) {
+export function requestCertificate(data) {
   return request({
-    url: '/api/v1/certificate/create',
+    url: '/api/v1/certificate/request',
     method: 'post',
     data
   })
@@ -35,7 +35,7 @@ export function getCertificateList(params) {
   })
 }
 
-// 获取证书
+// 下载证书
 export function downloadCertificate(data) {
   return request({
     url: '/api/v1/certificate/' + data.id,

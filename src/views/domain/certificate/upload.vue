@@ -71,8 +71,8 @@ export default {
         return {
           certificate: '',
           private_key: '',
-          type: null,
-          server_type: null
+          type: 1,
+          server_type: 1
         }
       }
     },
@@ -85,15 +85,6 @@ export default {
       server: [{
         value: 1,
         label: 'NGINX'
-      }, {
-        value: 2,
-        label: 'IIS'
-      }, {
-        value: 3,
-        label: 'Apache'
-      }, {
-        value: 4,
-        label: 'Tomcat'
       }],
       rules: {
         certificate: [
