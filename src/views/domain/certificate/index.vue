@@ -68,7 +68,7 @@
       :title="formTitle"
       :visible.sync="requestDialog"
       :show-close="false"
-      width="500px"
+      width="800px"
       :close-on-click-modal="false"
       @closed="handleClose"
     >
@@ -76,6 +76,8 @@
       <certificate-request-form
         ref="form"
         :form="currentValue"
+        :provider="providers"
+        :loading="loading"
         @close="requestDialog = false"
         @submit="submitRequest"
       />
@@ -86,6 +88,7 @@
 <script>
 import { Message } from 'element-ui'
 import { uploadCertificate, deleteCertificate, getCertificateList, downloadCertificate, requestCertificate } from '@/api/domain/certificate'
+import { getDomainServiceProviderList } from '@/api/domain/domain'
 import CertificateListTable from './table'
 import CertificateUploadForm from './upload'
 import CertificateRequestForm from './create'
@@ -102,6 +105,7 @@ export default {
       tableData: [],
       total: 0,
       formTitle: '',
+      providers: [],
       currentValue: undefined,
       queryParams: {
         name: '',
@@ -155,6 +159,10 @@ export default {
 
     /* 申请证书 */
     handleRequest() {
+      // 获取域名服务提供商
+      getDomainServiceProviderList().then((res) => {
+        this.providers = res.data
+      })
       // 显示弹框
       this.requestDialog = true
       // 更改弹框标题
@@ -259,19 +267,8 @@ export default {
 
     /* 证书申请 */
     submitRequest(formData) {
-      this.loading = true
-      requestCertificate(formData).then((res) => {
-        if (res.code === 0) {
-          Message({
-            message: res.msg,
-            type: 'success',
-            duration: 1000
-          })
-          this.loading = false
-          this.handleClose()
-        }
-      }, () => {
-        this.loading = false
+      requestCertificate(formData).then((res) => {}, () => {
+        this.handleClose()
       })
     },
 

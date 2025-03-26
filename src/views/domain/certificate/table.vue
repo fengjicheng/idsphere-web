@@ -19,10 +19,27 @@
         <el-tag v-if="scope.row.server_type === 4" size="mini" effect="plain">Tomcat</el-tag>
       </template>
     </el-table-column>
-    <el-table-column prop="status" label="状态" min-width="2%" />
-    <el-table-column label="操作" min-width="5%" align="center">
+    <el-table-column prop="status" label="状态" min-width="4%">
       <template slot-scope="scope">
-        <el-button :loading="scope.row.loading" size="mini" type="text" @click="handleDownload(scope.row)">下载</el-button>
+        <el-tag
+          :type="getStatusTagType(scope.row.status)"
+          size="mini"
+        >
+          <el-popover v-if="scope.row.status === 'pending'" trigger="hover" placement="top">
+            5 分钟后还未申请成功，尝试删除后重新申请或查看后端日志
+            <div slot="reference" class="name-wrapper">
+              <span v-if="scope.row.status === 'pending'">
+                <i class="el-icon-loading" style="margin-right: 4px;" />{{ getStatusText(scope.row.status) }}
+              </span>
+            </div>
+          </el-popover>
+          <span v-else>{{ getStatusText(scope.row.status) }}</span>
+        </el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column label="操作" min-width="3%" align="center">
+      <template slot-scope="scope">
+        <el-button :loading="scope.row.loading" :disabled="scope.row.status == 'pending'" size="mini" type="text" @click="handleDownload(scope.row)">下载</el-button>
         <el-button size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
       </template>
     </el-table-column>
@@ -43,6 +60,23 @@ export default {
     }
   },
   methods: {
+    getStatusTagType(status) {
+      const statusMap = {
+        expired: 'danger',
+        active: 'success',
+        pending: 'info'
+      }
+      return statusMap[status]
+    },
+
+    getStatusText(status) {
+      const textMap = {
+        expired: '已过期',
+        active: '可用',
+        pending: '加急申请中，请稍后...'
+      }
+      return textMap[status]
+    },
 
     /* 下载 */
     handleDownload(value) {
