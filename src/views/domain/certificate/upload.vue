@@ -39,7 +39,7 @@
             ref="keyUpload"
             class="upload-demo"
             action=""
-            accept=".key"
+            accept=".key,.pem"
             :multiple="false"
             :limit="1"
             :show-file-list="false"

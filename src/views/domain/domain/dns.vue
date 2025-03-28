@@ -102,10 +102,14 @@ export default {
 
     /* 暂停按钮 */
     handdlePause(value) {
-      value.status = value.status === 'ENABLE' ? 'DISABLE' : 'ENABLE'
+      const valueCopy = { ...value }
       this.$set(value, 'loading', true)
-      this.$emit('pause', value, (success) => {
+      valueCopy.status = value.status === 'ENABLE' ? 'DISABLE' : 'ENABLE'
+      this.$emit('pause', valueCopy, (success) => {
         this.$set(value, 'loading', false)
+        if (success) {
+          value.status = valueCopy.status
+        }
       })
     },
 

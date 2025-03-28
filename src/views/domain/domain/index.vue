@@ -159,10 +159,10 @@
       :show-close="false"
       width="700px"
       :close-on-click-modal="false"
-      @closed="handleClose"
+      @closed="handleClose2"
     >
       <!-- 表单组件 -->
-      <dns-add-form :loading="loading2" :form="currentValue" :domain-name="currentDomainName" @close="handleClose" @submit="handleDNsSubmit" />
+      <dns-add-form :loading="loading2" :form="currentValue" :domain-name="currentDomainName" @close="handleClose2" @submit="handleDNsSubmit" />
     </el-dialog>
   </div>
 </template>
@@ -568,6 +568,16 @@ export default {
       this.$refs.form.$refs.form.resetFields()
       // 获取最新数据
       this.getList()
+    },
+
+    /* 表单关闭 */
+    handleClose2() {
+      this.dnsAddDialog = false
+      this.loading = false
+      // 清空校验规则
+      this.$refs.form.$refs.form.resetFields()
+      // 获取最新数据
+      this.getDns()
     },
 
     /* 删除域名 */

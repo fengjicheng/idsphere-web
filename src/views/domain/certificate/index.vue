@@ -240,9 +240,9 @@ export default {
           duration: 1000
         })
         callback(true)
-      }).catch(() => {
+      }).catch((res) => {
         callback(false)
-      }).finally(() => {
+      }).finally((res) => {
         callback(false)
       })
     },
@@ -267,7 +267,7 @@ export default {
 
     /* 证书申请 */
     submitRequest(formData) {
-      requestCertificate(formData).then((res) => {}, () => {
+      requestCertificate(formData).then((res) => {}, (res) => {
         this.handleClose()
       })
     },

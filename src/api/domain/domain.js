@@ -81,7 +81,7 @@ export function syncDomain(params) {
 // 获取域名DNS解析列表
 export function getDomainDnsList(params) {
   return request({
-    url: '/api/v1/domain/dns',
+    url: '/api/v1/dns',
     method: 'get',
     params
   })
@@ -90,7 +90,7 @@ export function getDomainDnsList(params) {
 // 新增DNS解析
 export function addDns(data) {
   return request({
-    url: '/api/v1/domain/dns',
+    url: '/api/v1/dns',
     method: 'post',
     data
   })
@@ -99,7 +99,7 @@ export function addDns(data) {
 // 修改DNS解析
 export function changeDns(data) {
   return request({
-    url: '/api/v1/domain/dns',
+    url: '/api/v1/dns',
     method: 'put',
     data
   })
@@ -108,7 +108,7 @@ export function changeDns(data) {
 // 删除域名DNS解析
 export function deleteDns(data) {
   return request({
-    url: '/api/v1/domain/dns',
+    url: '/api/v1/dns',
     method: 'delete',
     data
   })
@@ -117,7 +117,7 @@ export function deleteDns(data) {
 // 修改DNS状态
 export function changeDnsStatus(data) {
   return request({
-    url: '/api/v1/domain/dns_status',
+    url: '/api/v1/dns/status',
     method: 'put',
     data
   })
