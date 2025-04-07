@@ -14,13 +14,13 @@
         </el-select>
       </el-form-item>
       <el-form-item label="证书" prop="certificate">
-        <div style="display: flex; align-items: flex-start;">
+        <div style="display: flex; align-items: flex-end;">
           <el-input v-model="form.certificate" type="textarea" :rows="5" placeholder="请将证书内容粘贴在此或通过文件上传，注意删除首尾空行" autocomplete="off" clearable style="width: 500px;padding-right: 10px;" />
           <el-upload
             ref="certUpload"
             class="upload-demo"
             action=""
-            accept=".crt,.cer"
+            accept=".pem,.crt,.cer"
             :multiple="false"
             :limit="1"
             :show-file-list="false"
@@ -33,7 +33,7 @@
         <div class="help-block" style="color: #999; font-size: 12px">证书文件通常以<span class="gray-bg">-----BEGIN CERTIFICATE-----</span>开头，以<span class="gray-bg">-----END CERTIFICATE-----</span>结尾</div>
       </el-form-item>
       <el-form-item label="私钥" prop="private_key">
-        <div style="display: flex; align-items: flex-start;">
+        <div style="display: flex; align-items: flex-end;">
           <el-input v-model="form.private_key" type="textarea" :rows="5" placeholder="请将私钥内容粘贴在此或通过文件上传，注意删除首尾空行" autocomplete="off" clearable style="width: 500px;padding-right: 10px;" />
           <el-upload
             ref="keyUpload"
@@ -116,7 +116,6 @@ export default {
 
     /* 读取证书文件 */
     handleCertificateUpload(file) {
-      console.log(file)
       const reader = new FileReader()
       reader.onload = e => {
         this.form.certificate = e.target.result.trim()
