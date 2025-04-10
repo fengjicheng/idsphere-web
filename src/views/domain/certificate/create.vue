@@ -36,6 +36,7 @@
             <el-option v-for="item in domains" :key="item.id" :label="'.' + item.name" :value="item.name" />
           </el-select>
         </el-input>
+        <div class="help-block" style="color: #999; font-size: 12px">泛域名证书记录值为：*，多域名证书中间使用英文逗号分隔，如：doc,www</div>
       </el-form-item>
       <el-form-item label="邮箱地址：">
         <el-input v-model="form.email" placeholder="请输入邮箱地址" autocomplete="off" clearable />

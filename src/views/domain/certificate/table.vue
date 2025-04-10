@@ -39,6 +39,7 @@
     </el-table-column>
     <el-table-column label="操作" min-width="3%" align="center">
       <template slot-scope="scope">
+        <el-button :loading="scope.row.loading" :disabled="scope.row.status == 'pending'" size="mini" type="text">续订</el-button>
         <el-button :loading="scope.row.loading" :disabled="scope.row.status == 'pending'" size="mini" type="text" @click="handleDownload(scope.row)">下载</el-button>
         <el-button size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
       </template>

@@ -85,7 +85,8 @@ export default {
         { value: 'user_sync', name: '用户同步' },
         { value: 'domain_sync', name: '域名同步' },
         { value: 'domain_expire_notify', name: '域名过期通知' },
-        { value: 'certificate_expire_notify', name: '证书过期通知' }
+        { value: 'certificate_expire_notify', name: '证书过期通知' },
+        { value: 'url_certificate_expire_notify', name: '站点证书检测' }
       ],
       rules: {
         name: [
