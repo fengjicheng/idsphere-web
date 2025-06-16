@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 
 // 前端存储的Cookie名称
-const TokenKey = 'door_token'
+const TokenKey = window.location.host
 
 export function getToken() {
   return Cookies.get(TokenKey)
