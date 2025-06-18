@@ -24,6 +24,7 @@
             <el-radio :label="1">CAS3.0</el-radio>
             <el-radio :label="2">OAuth2</el-radio>
             <el-radio :label="3">SAML2</el-radio>
+            <el-radio :label="4">Nginx</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-col>

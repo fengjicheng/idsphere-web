@@ -93,7 +93,7 @@
       :visible.sync="siteAddDialog"
       :show-close="false"
       :close-on-click-modal="false"
-      width="910px"
+      width="1000px"
       @closed="handleClose"
     >
       <site-add-form
