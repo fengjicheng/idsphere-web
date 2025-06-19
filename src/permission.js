@@ -35,6 +35,9 @@ router.beforeEach(async(to, from, next) => {
       } else if ('service' in query) {
         // 获取CAS授权
         await store.dispatch('user/get_cas_authorize', to.query)
+      } else if ('nginx_redirect_uri' in query) {
+        // 获取Nginx授权
+        await store.dispatch('user/get_nginx_authorize', to.query)
       } else if ('SAMLRequest' in query) {
         // 获取SAML授权
         const authorize = await store.dispatch('user/get_saml_authorize', to.query)

@@ -1,4 +1,4 @@
-import { login, logout, getUserInfo, mfaAuth, GetSAMLAuthorize, GetCASAuthorize, GetOAuthAuthorize, GetDingTalkAuthorize, GetWeChatAuthorize, GetFeishuAuthorize } from '@/api/user'
+import { login, logout, getUserInfo, mfaAuth, GetSAMLAuthorize, GetCASAuthorize, GetOAuthAuthorize, GetDingTalkAuthorize, GetWeChatAuthorize, GetFeishuAuthorize, GetNginxAuthorize } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -114,6 +114,17 @@ const actions = {
         // 将token存储到cookie中
         setToken(token)
         resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  // 获取Nginx授权
+  get_nginx_authorize({ commit }, query) {
+    return new Promise((resolve, reject) => {
+      GetNginxAuthorize(query).then(response => {
+        window.location.href = response.redirect_uri
       }).catch(error => {
         reject(error)
       })

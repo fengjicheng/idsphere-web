@@ -62,6 +62,15 @@ export function GetCASAuthorize(data) {
   })
 }
 
+// Nginx 授权
+export function GetNginxAuthorize(params) {
+  return request({
+    url: '/api/v1/sso/nginx/authorize',
+    method: 'get',
+    params
+  })
+}
+
 // SAML2授权
 export function GetSAMLAuthorize(data) {
   return request({
