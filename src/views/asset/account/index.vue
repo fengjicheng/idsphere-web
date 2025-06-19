@@ -91,7 +91,7 @@
       :title="formTitle"
       :visible.sync="getCodeDialog"
       :show-close="false"
-      width="500px"
+      width="600px"
       :close-on-click-modal="false"
       @close="handleClose"
     >

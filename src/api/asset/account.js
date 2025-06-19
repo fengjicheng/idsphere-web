@@ -18,10 +18,11 @@ export function getAccountPassword(data) {
 }
 
 // 获取短信校验码
-export function getCode() {
+export function getCode(data) {
   return request({
     url: '/api/v1/account/code',
-    method: 'get'
+    method: 'post',
+    data
   })
 }
 

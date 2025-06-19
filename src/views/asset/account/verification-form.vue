@@ -2,14 +2,15 @@
   <el-form ref="form" :model="form" :rules="rules" :validate-on-rule-change="false" label-position="right" label-width="100px" style="width: 95%">
     <el-form-item label="验证方式：" prop="validate_type">
       <el-radio-group v-model="form.validate_type" @input="handleChange">
-        <el-radio :label="1" class="white-radio">短信验证码</el-radio>
-        <el-radio :label="2" class="white-radio">MFA验证码</el-radio>
+        <el-radio :label="1" class="white-radio">短信校验码</el-radio>
+        <el-radio :label="2" class="white-radio">MFA校验码</el-radio>
+        <el-radio :label="3" class="white-radio">邮件校验码</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="验证码：" prop="code">
       <el-input v-model="form.code" autocomplete="off" placeholder="6位验证码" clearable style="width: 150px" />
       <el-button type="info" style="margin-left: 15px" :disabled="canClick" @click="getSmSCode()">{{ verifyCode }}</el-button>
-      <div class="help-block" style="color: #999; font-size: 12px">认证成功后可在10分钟内获取任意密码</div>
+      <div class="help-block" style="color: #999; font-size: 12px">认证成功后可在5分钟内获取任意密码</div>
     </el-form-item>
     <el-form-item>
       <div>
@@ -42,13 +43,13 @@ export default {
   },
   data() {
     return {
-      verifyCode: '获取验证码',
+      verifyCode: '发送校验码',
       totalTime: 60,
       canClick: false,
       clock: null,
       rules: {
         code: [
-          { required: true, message: '请输入短信验证码', trigger: 'change' }
+          { required: true, message: '请输入校验码', trigger: 'change' }
         ]
       }
     }
@@ -57,7 +58,7 @@ export default {
 
     /* 获取短信验证码 */
     getSmSCode() {
-      getCode().then((res) => {
+      getCode(this.form).then((res) => {
         if (this.canClick) return
         this.canClick = true
         this.verifyCode = this.totalTime + 's后可重新发送'
@@ -67,7 +68,7 @@ export default {
           if (this.totalTime < 0) {
             clearInterval(this.clock)
             this.totalTime = 60
-            this.verifyCode = '获取验证码'
+            this.verifyCode = '发送校验码'
             this.canClick = false
           }
         }, 1000)
@@ -83,7 +84,11 @@ export default {
 
     /* 单点按钮变化 */
     handleChange(val) {
-      this.canClick = val !== 1
+      if (val === 2) {
+        this.canClick = true
+      } else {
+        this.canClick = false
+      }
     },
 
     /* 提交表单 */
