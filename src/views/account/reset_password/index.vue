@@ -11,10 +11,8 @@
         <el-radio-group v-model="form.validate_type">
           <el-radio :label="1" class="white-radio">短信验证码</el-radio>
           <el-radio :label="2" class="white-radio">MFA验证码</el-radio>
+          <el-radio :label="3" class="white-radio">邮件</el-radio>
         </el-radio-group>
-      </el-form-item>
-      <el-form-item v-if="form.validate_type === 1" label="手机号：" prop="phone_number">
-        <el-input v-model="form.phone_number" placeholder="请输入绑定手机号" name="phone_number" type="text" />
       </el-form-item>
       <el-form-item label="校验码：" prop="code">
         <el-input v-model="form.code" placeholder="6位校验码" name="code" type="text" style="width: 100px" />
@@ -38,13 +36,6 @@ import { getVerificationCode, resetPasswordSelf } from '@/api/user/user'
 
 export default {
   data() {
-    const validatePhone = (rule, value, callback) => {
-      if (!/^1[3456789]\d{9}$/.test(value)) {
-        callback(new Error('请输入正确的手机号'))
-      } else {
-        callback()
-      }
-    }
     const checkPassword = (rule, value, callback) => {
       if (value !== this.form.password) {
         callback(new Error('两次输入密码不一致!'))
@@ -53,14 +44,14 @@ export default {
       }
     }
     return {
-      buttonText: '获取校验码',
+      buttonText: '发送校验码',
       totalTime: 60,
       isActive: false,
       loading: false,
       value: '提 交',
       form: {
         username: '',
-        phone_number: '',
+        // phone_number: '',
         validate_type: 1,
         code: '',
         password: '',
@@ -69,10 +60,6 @@ export default {
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'change' }
-        ],
-        phone_number: [
-          { required: true, message: '请输入手机号', trigger: 'change' },
-          { validator: validatePhone, trigger: 'change' }
         ],
         validate_type: [
           { required: true, message: '请选择验证方式', trigger: 'change' }
@@ -111,37 +98,30 @@ export default {
         if (valid) {
           return false
         } else {
-          // 对手机号校验（必填）
-          this.$refs[formData].validateField(['phone_number'], async(valid) => {
-            if (valid) {
-              return false
-            } else {
-              // 将当前输入的校验码清空
-              this.form.code = ''
-              // 获取新的校验码
-              getVerificationCode(this.form).then((res) => {
-                // 禁用按钮
-                this.isActive = true
-                // 更改按钮提示
-                this.buttonText = this.totalTime + 's后可重新发送'
-                // 执行倒计时
-                const clock = window.setInterval(() => {
-                  this.totalTime--
-                  this.buttonText = this.totalTime + 's后可重新发送'
-                  if (this.totalTime < 0) {
-                    window.clearInterval(clock)
-                    this.totalTime = 60
-                    this.buttonText = '重新获取验证码'
-                    this.isActive = false
-                  }
-                }, 1000)
-                if (res.code === 0) {
-                  Message({
-                    message: res.msg,
-                    type: 'success',
-                    duration: 1000
-                  })
-                }
+          // 将当前输入的校验码清空
+          this.form.code = ''
+          // 获取新的校验码
+          getVerificationCode(this.form).then((res) => {
+            // 禁用按钮
+            this.isActive = true
+            // 更改按钮提示
+            this.buttonText = this.totalTime + 's后可重新发送'
+            // 执行倒计时
+            const clock = window.setInterval(() => {
+              this.totalTime--
+              this.buttonText = this.totalTime + 's后可重新发送'
+              if (this.totalTime < 0) {
+                window.clearInterval(clock)
+                this.totalTime = 60
+                this.buttonText = '重新发送校验码'
+                this.isActive = false
+              }
+            }, 1000)
+            if (res.code === 0) {
+              Message({
+                message: res.msg,
+                type: 'success',
+                duration: 1000
               })
             }
           })

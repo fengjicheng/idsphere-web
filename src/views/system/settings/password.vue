@@ -35,6 +35,10 @@
         </el-input>
         <div class="help-block" style="color: #999; font-size: 12px">密码过期提醒将以邮件的形式，需要配置发件服务器，设置为 99999 表示不提醒。</div>
       </el-form-item>
+      <el-form-item label="邮件密码重置">
+        <el-switch v-model="form.passwordMailResetOff" />
+        <div class="help-block" style="color: #999; font-size: 12px;">此方式不安全，不建议开启，需要配置发件服务器，建议使用双因素认证认证的方式进行密码重置。</div>
+      </el-form-item>
       <el-form-item>
         <div>
           <el-button type="primary" size="mini" @click="handleSubmit">确 定</el-button>
@@ -84,7 +88,8 @@ export default {
           passwordExpireDays: String(passwordExpireDays),
           passwordLength: String(passwordLength),
           passwordComplexity: JSON.stringify(passwordComplexity),
-          passwordExpiryReminderDays: String(passwordExpiryReminderDays)
+          passwordExpiryReminderDays: String(passwordExpiryReminderDays),
+          passwordMailResetOff: this.form.passwordMailResetOff ? 'true' : 'false'
         }
         this.$emit('submit', data, (result) => {})
       })
