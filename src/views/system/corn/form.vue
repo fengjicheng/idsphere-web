@@ -48,7 +48,11 @@
           <el-radio :label="3">飞书机器人</el-radio>
           <el-radio :label="4">企业机器人</el-radio>
         </el-radio-group>
-        <div v-if="form.notify_type === 1" class="help-block" style="color: #999; font-size: 12px">请确保已完成《<a :href="baseUrl() + '/system/conf'" target="_blank" style="color: red">发件服务器</a>》相关配置</div>
+        <div v-if="form.notify_type === 1" class="help-block" style="color: #999; font-size: 12px">
+          请确保已完成《
+          <a href="javascript:;" style="color: red" @click="goToMailConfig">发件服务器</a>
+          》相关配置
+        </div>
         <div v-if="form.notify_type === 2" class="help-block" style="color: #999; font-size: 12px">可参考《<a href="https://open.dingtalk.com/document/orgapp/custom-bot-creation-and-installation" target="_blank" style="color: red">创建自定义机器人</a>》官方文档，关键字可以使用【系统配置】-【安全设置】中的提供商名称</div>
         <div v-if="form.notify_type === 3" class="help-block" style="color: #999; font-size: 12px">可参考《<a href="https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot" target="_blank" style="color: red">自定义机器人使用指南</a>》官方文档，关键字可以使用【系统配置】-【安全设置】中的提供商名称</div>
         <div v-if="form.notify_type === 4" class="help-block" style="color: #999; font-size: 12px">可参考《<a href="https://open.work.weixin.qq.com/help2/pc/14931" target="_blank" style="color: red">如何设置群机器人</a>》官方文档</div>
@@ -92,18 +96,14 @@ export default {
   },
   data() {
     return {
-      baseUrl() {
-        const port = window.location.port ? `:${window.location.port}` : ''
-        return `${window.location.protocol}//${window.location.hostname}${port}`
-      },
       // 请务随意更改value，该值用于后端任务执行逻辑判断
       methods: [
-        { value: 'password_expire_notify', name: '* 用户密码过期提醒' },
-        { value: 'user_sync', name: '用户同步，同时支持Windows AD 和 OpenLDAP' },
-        { value: 'domain_sync', name: '域名服务提供商域名同步' },
-        { value: 'domain_expire_notify', name: '* 过期和即将过期（有效期小于30天）域名提醒' },
-        { value: 'certificate_expire_notify', name: '* 过期和即将过期（有效期小于30天）证书提醒' },
-        { value: 'url_certificate_expire_notify', name: '* HTTPS 站点证书异常（检查异常、过期，即将过期）提醒' }
+        { value: 'user_sync', name: '【同步】用户同步' },
+        { value: 'domain_sync', name: '【同步】域名同步' },
+        { value: 'password_expire_notify', name: '* 【过期提醒】用户密码过期' },
+        { value: 'domain_expire_notify', name: '* 【过期提醒】域名过期' },
+        { value: 'certificate_expire_notify', name: '* 【过期提醒】证书过期' },
+        { value: 'url_certificate_expire_notify', name: '* 【过期提醒】站点证书过期' }
       ],
       rules: {
         name: [
@@ -127,6 +127,17 @@ export default {
           return
         }
         this.$emit('submit', this.form)
+      })
+    },
+
+    // 跳转至邮件配置页面
+    goToMailConfig() {
+      this.$router.push({
+        name: 'ConfManagement',
+        // params: {
+        //   menu: 'mail'
+        // },
+        query: { menu: 'mail' }
       })
     },
 
