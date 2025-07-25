@@ -29,6 +29,7 @@
                 <el-tag v-if="scope.row.sso_type === 1" size="small">CAS3.0</el-tag>
                 <el-tag v-if="scope.row.sso_type === 2" size="small">OAuth2</el-tag>
                 <el-tag v-if="scope.row.sso_type === 3" size="small">SAML2</el-tag>
+                <el-tag v-if="scope.row.sso_type === 4" size="small">Nginx</el-tag>
               </div>
               <el-tag v-else type="danger" size="small">关闭</el-tag>
             </template>
