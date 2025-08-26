@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 新增集群
 export function addCluster(data) {
   return request({
-    url: '/api/v1/kubernetes/cluster',
+    url: '/api/v1/cluster',
     method: 'post',
     data
   })
@@ -12,7 +12,7 @@ export function addCluster(data) {
 // 删除集群
 export function deleteCluster(data) {
   return request({
-    url: '/api/v1/kubernetes/cluster/' + data.id,
+    url: '/api/v1/cluster/' + data.id,
     method: 'delete'
   })
 }
@@ -20,7 +20,7 @@ export function deleteCluster(data) {
 // 修改集群信息
 export function changeCluster(data) {
   return request({
-    url: '/api/v1/kubernetes/cluster',
+    url: '/api/v1/cluster',
     method: 'put',
     data
   })
@@ -29,7 +29,7 @@ export function changeCluster(data) {
 // 获取集群列表
 export function getKubernetesList(params) {
   return request({
-    url: '/api/v1/kubernetes/clusters',
+    url: '/api/v1/clusters',
     method: 'get',
     params
   })
